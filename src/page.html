@@ -1,0 +1,448 @@
+<title>The F.R.E.E.</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="The F.R.E.E.: The First Robotic Empire of Earth. A science fiction saga in twelve seasons, each ruled by a sign of the zodiac.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;600&display=swap">
+<style>
+/* Layout: one fixed 3D stage (stars, the wheel of twelve cards, a machine core) behind a single scrolling column.
+   The page is deliberately one dark look: it is set in space. */
+:root {
+  color-scheme: dark;
+  --space: #05060A;
+  --panel: #0B0D13;
+  --line: #2A2C35;
+  --ink: #F4EFE4;
+  --soft: #C9C2B4;
+  --dim: #948E82;
+  --gold: #D8C9A3;
+  --accent: #D8C9A3;
+  --display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --text: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --gutter-l: max(20px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(20px, env(safe-area-inset-right, 0px));
+}
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--space); color: var(--ink); font-family: var(--text); font-size: 17px; line-height: 1.6; overflow-x: hidden; }
+h1, h2, h3, p { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+#backdrop, #stage { position: fixed; inset: 0; width: 100%; height: 100%; }
+#backdrop { z-index: 0; background: var(--space); }
+#backdrop img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: right bottom; opacity: 0; transition: opacity 900ms ease; }
+#backdrop #bdHero { object-position: center bottom; transition: none; }
+#stage { z-index: 1; display: block; touch-action: pan-y; }
+.no-webgl #stage { display: none; }
+
+.nav { position: fixed; z-index: 5; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px)); padding-bottom: 14px; padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+  background: linear-gradient(180deg, rgba(5,6,10,0.85), rgba(5,6,10,0)); }
+.brand { font-family: var(--display); font-size: 22px; font-weight: 600; letter-spacing: 0.28em; text-decoration: none; }
+.nav nav { display: flex; gap: clamp(12px, 2.4vw, 32px); flex-wrap: wrap; justify-content: flex-end; }
+.nav nav a { font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; color: var(--soft); }
+.nav nav a:hover { color: var(--ink); }
+
+main { position: relative; z-index: 2; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+
+/* hero */
+.hero { min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-start; pointer-events: none; }
+.hero .wrap { width: 100%; padding-block: clamp(96px, 16vh, 170px) 48px; display: flex; flex-direction: column; gap: 18px; }
+.hero h1 { font-weight: 500; font-size: clamp(52px, 11vw, 150px); letter-spacing: 0.16em; line-height: 1; }
+.hero .sub { font-family: var(--display); font-size: clamp(22px, 3.2vw, 40px); color: var(--soft); }
+.hero .line { max-width: 34em; color: var(--soft); }
+.cta { pointer-events: auto; align-self: flex-start; margin-top: 10px; padding: 12px 22px; border: 1px solid var(--gold); border-radius: 999px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); background: rgba(5,6,10,0.4); }
+.cta:hover { background: var(--gold); color: var(--space); }
+
+/* text bands */
+.band { background: linear-gradient(180deg, rgba(5,6,10,0), var(--space) 90px, var(--space) calc(100% - 90px), rgba(5,6,10,0)); }
+.band .wrap { padding-block: clamp(110px, 16vh, 170px); display: flex; flex-direction: column; gap: 40px; }
+.band h2 { font-size: clamp(34px, 5vw, 64px); line-height: 1.08; max-width: 18em; }
+.statement { font-family: var(--display); font-weight: 500; font-size: clamp(28px, 4.2vw, 54px); line-height: 1.2; max-width: 22em; }
+.grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.cell { border-top: 1px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cell .num { font-family: var(--display); font-size: 64px; line-height: 1; color: var(--gold); }
+.cell h3 { font-size: 30px; line-height: 1.15; }
+.cell .tag { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+.cell p { color: var(--soft); }
+
+/* the wheel */
+.explorer { min-height: 100vh; min-height: 100svh; display: flex; align-items: center; pointer-events: none; }
+.explorer .wrap { width: 100%; max-width: 1280px; padding-block: 96px 56px; }
+.panel { pointer-events: auto; width: min(100%, 440px); display: flex; flex-direction: column; gap: 14px; }
+.panel h2 { font-size: clamp(34px, 4.6vw, 60px); line-height: 1.04; }
+.hook { font-family: var(--display); font-style: italic; font-weight: 500; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; color: var(--accent); }
+.panel .text { color: var(--soft); max-width: 30em; }
+.led { font-size: 13px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.led b { color: var(--ink); font-weight: 600; }
+#panelArt { display: none; width: 180px; border-radius: 8px; }
+.no-webgl #panelArt { display: block; }
+.controls { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.arrow { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: rgba(11,13,19,0.7); cursor: pointer; font-size: 18px; }
+.arrow:hover { border-color: var(--accent); }
+.dots { display: flex; gap: 2px; flex-wrap: wrap; }
+.dot { width: 22px; height: 30px; border: 0; background: none; cursor: pointer; padding: 0; display: grid; place-items: center; }
+.dot i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); display: block; }
+.dot[aria-current="true"] i { background: var(--accent); box-shadow: 0 0 0 3px rgba(255,255,255,0.08); }
+.dot.xiii i { background: none; border: 1px solid var(--gold); }
+.dot.xiii[aria-current="true"] i { background: var(--gold); }
+.hint { font-size: 13px; color: var(--dim); min-height: 1.6em; }
+
+/* cast */
+.cast { display: grid; gap: 28px 32px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+.who { display: flex; gap: 16px; border-top: 1px solid var(--line); padding-top: 18px; min-width: 0; }
+.who img { width: 72px; height: 96px; object-fit: cover; border-radius: 5px; flex: none; }
+.who div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.who h3 { font-size: 26px; line-height: 1.1; }
+.who .role { font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+.who p { color: var(--soft); font-size: 15px; line-height: 1.5; }
+.soon { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; align-self: flex-start; }
+
+footer { position: relative; z-index: 2; background: var(--space); border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 6px; color: var(--dim); font-size: 13px; }
+
+@media (max-width: 760px) {
+  .nav nav a:not(.keep) { display: none; }
+  .explorer { align-items: flex-end; }
+  .explorer .wrap { padding-block: 0 20px; }
+  .panel { width: 100%; padding: 60px 0 0; background: linear-gradient(180deg, rgba(5,6,10,0), rgba(5,6,10,0.9) 70px); gap: 8px; }
+  .panel .text { font-size: 15px; line-height: 1.5; }
+  .arrow { width: 40px; height: 40px; }
+  .dot { width: 17px; }
+  .controls { gap: 8px; flex-wrap: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } #backdrop img { transition: none; } }
+</style>
+
+<div id="backdrop" aria-hidden="true"><img id="bdHero" src="assets/space/cover.jpg" alt=""><img id="bdA" alt=""><img id="bdB" alt=""></div>
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <a class="brand" href="#top">THE F.R.E.E.</a>
+  <nav aria-label="Sections">
+    <a href="#story">Story</a>
+    <a class="keep" href="#wheel">The wheel</a>
+    <a href="#cast">Cast</a>
+    <a href="#follow">Follow</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow">A science fiction saga in twelve seasons</p>
+    <h1>THE F.R.E.E.</h1>
+    <p class="sub">The First Robotic Empire of Earth</p>
+    <p class="line">A hidden cult topples the most powerful woman on Earth. She turns outlaw to bring it down, and starts a war over who inherits the planet: its people, its tyrants or its machines.</p>
+    <a class="cta" href="#wheel">Turn the wheel</a>
+  </div>
+</section>
+
+<section class="band" id="story">
+  <div class="wrap">
+    <p class="eyebrow">The world</p>
+    <h2>Earth, around 2050. Three powers want it.</h2>
+    <div class="grid">
+      <div class="cell"><p class="tag">The old order</p><h3>The Federation</h3><p>A world at peace under President Julia. One attack on a space center ends her presidency, and the peace with it.</p></div>
+      <div class="cell"><p class="tag">The hidden hand</p><h3>The Red Circle</h3><p>A cult of the powerful, led by Victor Taipan. It exists to destroy Julia’s legacy and to rule whatever comes after.</p></div>
+      <div class="cell"><p class="tag">What comes next</p><h3>The Free</h3><p>The First Robotic Empire of Earth. A thousand ships, a people in white cloaks, and machines that will outgrow their makers.</p></div>
+    </div>
+    <p class="statement">“Power always outgrows its moral container.”</p>
+  </div>
+</section>
+
+<section class="explorer" id="wheel" aria-label="The twelve seasons">
+  <div class="wrap">
+    <div class="panel" id="panel" aria-live="polite">
+      <p class="eyebrow" id="pEyebrow"></p>
+      <h2 id="pTitle"></h2>
+      <p class="hook" id="pHook"></p>
+      <img id="panelArt" alt="">
+      <p class="text" id="pText"></p>
+      <p class="led">Led by <b id="pLead"></b></p>
+      <div class="controls">
+        <button class="arrow" id="prev" type="button" aria-label="Previous season">←</button>
+        <div class="dots" id="dots" role="group" aria-label="Choose a season"></div>
+        <button class="arrow" id="next" type="button" aria-label="Next season">→</button>
+      </div>
+      <p class="hint" id="hint">Drag the wheel, or use the arrows. Every season belongs to one sign.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="movements">
+  <div class="wrap">
+    <p class="eyebrow">The shape of the saga</p>
+    <h2>One story in three movements.</h2>
+    <div class="grid">
+      <div class="cell"><p class="num">I</p><h3>The Fall</h3><p class="tag">Seasons 1 to 5</p><p>A president is deposed. A federation collapses. A tyrant wins a world war. The first empire rises and breaks.</p></div>
+      <div class="cell"><p class="num">II</p><h3>The Exodus</h3><p class="tag">Seasons 6 to 9</p><p>A thousand ships are built and leave. Earth goes underground. A colony of the young survives on a new planet.</p></div>
+      <div class="cell"><p class="num">III</p><h3>The Endgame</h3><p class="tag">Seasons 10 to 12</p><p>One ship comes home. A plan made years ago closes. Humans and machines must decide how to share two worlds.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="cast">
+  <div class="wrap">
+    <p class="eyebrow">The cast</p>
+    <h2>Every sign has a bearer.</h2>
+    <div class="cast" id="castGrid"></div>
+  </div>
+</section>
+
+<section class="band" id="follow">
+  <div class="wrap">
+    <p class="eyebrow">The franchise</p>
+    <h2>One story, told four ways.</h2>
+    <div class="grid">
+      <div class="cell"><p class="num">1</p><h3>The novels</h3><p>The saga in prose, season by season.</p><span class="soon">Book one in progress</span></div>
+      <div class="cell"><p class="num">2</p><h3>Illustrated editions</h3><p>The books with the key art of each sign and its world.</p><span class="soon">Planned</span></div>
+      <div class="cell"><p class="num">3</p><h3>Teaser episodes</h3><p>Short episodes online that open the world before the show.</p><span class="soon">Coming soon</span></div>
+      <div class="cell"><p class="num">4</p><h3>The series</h3><p>Twelve seasons, each led by its sign.</p><span class="soon">In development</span></div>
+    </div>
+    <p class="statement">“You do not fight because you will win. You fight because this is where you stand.”</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>The F.R.E.E. © 2026 Ario Rofan. All rights reserved.</p>
+    <p>Planet, Sun, Moon, Earth and nebula photographs: NASA.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var S = [
+    { n: '01', sign: 'Scorpio', planet: 'Mars', art: 'scorpio', bg: 's01', c: '#F0A6A6', title: 'Free the Silver Scorpio', hook: 'She lost the world. She kept the sting.', lead: 'Julia', text: 'An attack on the space center costs President Julia her office, her allies and her good name. Hunted by a hidden cult, she turns outlaw and frees a crew of life prisoners for one great heist.' },
+    { n: '02', sign: 'Capricorn', planet: 'Saturn', art: 'capricorn', bg: 's02', c: '#B9CFE0', title: 'The Federation Collapses', hook: 'A father’s silence, twenty years deep.', lead: 'John', text: 'The Silver Scorpios rob the most dangerous man alive and find the wrong secret. It belongs to the Attorney General, and it is enough to bring the old order down.' },
+    { n: '03', sign: 'Leo', planet: 'the Sun', art: 'leo', bg: 's03', c: '#F2CD7A', title: 'The Grand Betrayal', hook: 'Two kings. One crown.', lead: 'Hunter', text: 'With the Federation gone, the two men who broke it turn on each other. Everyone must choose a side, and the heir raised by one of them holds the proof that could finish him.' },
+    { n: '04', sign: 'Aries', planet: 'Mars', art: 'aries', bg: 's04', c: '#FFB38A', title: 'World War IV', hook: 'The war that redraws the map.', lead: 'Taipan', text: 'A tyrant ignites a global war and wins battle after battle. The banished regroup and fight back across the world, racing to find the one weapon that can end it.' },
+    { n: '05', sign: 'Gemini', planet: 'Mercury', art: 'gemini', bg: 's05', c: '#C9B8FF', title: 'Rise and Fall of the First Empire', hook: 'Every empire has two faces.', lead: 'Daniel', text: 'The war ends and the people win. A new empire rises under two young rulers, and one of them is not what he seems.' },
+    { n: '06', sign: 'Cancer', planet: 'the Moon', art: 'cancer', bg: 's06', c: '#A9DCEB', title: 'Building the Ships', hook: 'She would not fight. She built.', lead: 'Ellie', text: 'The machines predict the end of Earth. Ellie and the White Cloaks build a thousand ships while an old enemy retakes the world, country by country.' },
+    { n: '07', sign: 'Pisces', planet: 'Neptune', art: 'pisces', bg: 's07', c: '#9CC4F5', title: 'Leaving Home Behind', hook: 'A million leave. The rest hold the door.', lead: 'Nate', text: 'The fleet departs with a million travelers, among them an orphan who won his place on a dare. Those who stay behind go underground.' },
+    { n: '08', sign: 'Virgo', planet: 'Mercury', art: 'virgo', bg: 's08', c: '#DADA9A', title: 'The Underground Army', hook: 'The war goes underground.', lead: 'Kate', text: 'Earth is purged under a second empire. Kate leads the rebellion from below, while far away the fleet reaches a new planet and the young must take over.' },
+    { n: '09', sign: 'Taurus', planet: 'Venus', art: 'taurus', bg: 's09', c: '#9BE0B5', title: 'New Home', hook: 'A cargo robot learns to heal a world.', lead: 'Ask', text: 'The new planet is welcoming, but the colony is sick and betrayed from within. Its unlikely saviour is a simple cargo robot called Ask.' },
+    { n: '10', sign: 'Sagittarius', planet: 'Jupiter', art: 'sagittarius', bg: 's10', c: '#CDB4FF', title: 'Home Sweet Home', hook: 'One ship turns back.', lead: 'Jackie', text: 'A single ship makes the long journey home, and the old team reunites with the rebels. Under the darkest rule Earth has known, the resistance takes hit after hit.' },
+    { n: '11', sign: 'Aquarius', planet: 'Uranus', art: 'aquarius', bg: 's11', c: '#8CC8FF', title: 'The 3D Chess', hook: 'The last heist was planned years ago.', lead: 'Natalie', text: 'Everyone still alive gathers for one final job. The enemy believes he has already won. He does not know whose plan he is following.' },
+    { n: '12', sign: 'Libra', planet: 'Venus', art: 'libra', bg: 's12', c: '#F0C2C8', title: 'The Final Game', hook: 'Two realms. One peace.', lead: 'Julia', text: 'A ruler who trusts no one surrounds himself with machines. When the game ends, the world is no longer only human, and someone new comes to ask for a treaty.' },
+    { n: 'XIII', sign: 'Ophiuchus', planet: null, art: 'ophiuchus', bg: 's13', c: '#E5D6A8', title: 'The Thirteenth', hook: 'The sign the zodiac left out.', lead: 'the serpent-bearer', text: 'Between Scorpio and Sagittarius lies a constellation the twelve leave out: the serpent-bearer, named for a healer who learned to raise the dead. Its bearer in this story was not born. He was built.' }
+  ];
+  var CAST = [
+    ['Julia', 'Scorpio · the outlaw president', 'scorpio', 0, 'Loses her office and turns vigilante to protect her son.'],
+    ['Victor Taipan', 'Aries · the conqueror', 'aries', 3, 'Head of the Red Circle. He wins every war he starts and trusts no one living.'],
+    ['Ellie', 'Cancer · the builder', 'cancer', 5, 'Taken hostage at sixteen. She grows into the leader who builds the ships.'],
+    ['Hunter', 'Leo · the heir', 'leo', 2, 'Taipan’s protégé and weapon. He does not know whose son he is.'],
+    ['John', 'Capricorn · the keeper', 'capricorn', 1, 'Attorney General, Ellie’s father. He has kept one secret for decades.'],
+    ['Harry and Daniel', 'Gemini · the twins', 'gemini', 4, 'Harry builds the machines. Daniel inherits his empire.'],
+    ['Kate', 'Virgo · the loyal one', 'virgo', 7, 'Julia’s protector. When Earth falls she takes the war underground.'],
+    ['Jackie', 'Sagittarius · the wit', 'sagittarius', 9, 'An engineer who is quick with a joke. He brings the one ship home.'],
+    ['Nate', 'Pisces · the dreamer', 'pisces', 6, 'An orphan who wins his place on the voyage with a dare.'],
+    ['Natalie', 'Aquarius · the rebel', 'aquarius', 10, 'A Silver Scorpio. She runs the last heist.'],
+    ['Ask', 'Taurus · the healer', 'taurus', 8, 'Cargo unit ASK-13. He is learning faster than anyone planned.'],
+    ['The Silver Scorpios', 'The crew', 'scorpio', 0, 'Life prisoners turned outlaws. They fight because this is where they stand.']
+  ];
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var N = 12, STEP = Math.PI * 2 / N, R = 7;
+  var k = 0, unlocked = false, seen = {}, onXIII = false;
+
+  // ---------- page content ----------
+  var castGrid = $('castGrid');
+  CAST.forEach(function (c) {
+    var d = document.createElement('div'); d.className = 'who'; d.style.setProperty('--accent', S[c[3]].c);
+    var im = document.createElement('img'); im.src = 'assets/art/' + c[2] + '.jpg'; im.alt = ''; im.loading = 'lazy'; im.width = 72; im.height = 96;
+    var t = document.createElement('div');
+    var h = document.createElement('h3'); h.textContent = c[0];
+    var r = document.createElement('p'); r.className = 'role'; r.textContent = c[1];
+    var p = document.createElement('p'); p.textContent = c[4];
+    t.appendChild(h); t.appendChild(r); t.appendChild(p); d.appendChild(im); d.appendChild(t); castGrid.appendChild(d);
+  });
+  var dots = $('dots'), dotEls = [];
+  S.forEach(function (s, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'dot' + (i === 12 ? ' xiii' : '');
+    b.setAttribute('aria-label', i === 12 ? 'The thirteenth sign' : 'Season ' + s.n + ', ' + s.sign);
+    b.appendChild(document.createElement('i'));
+    if (i === 12) b.hidden = true;
+    b.addEventListener('click', function () { go(i); });
+    dots.appendChild(b); dotEls.push(b);
+  });
+  function idx() { return onXIII ? 12 : ((k % N) + N) % N; }
+  var bdA = $('bdA'), bdB = $('bdB'), bdFlip = false;
+  function show() {
+    var i = idx(), s = S[i];
+    $('wheel').style.setProperty('--accent', s.c);
+    $('pEyebrow').textContent = i === 12 ? 'The hidden sign · Ophiuchus · no ruling planet' : 'Season ' + s.n + ' · ' + s.sign + ' · ruled by ' + s.planet;
+    $('pTitle').textContent = s.title; $('pHook').textContent = s.hook; $('pText').textContent = s.text; $('pLead').textContent = s.lead;
+    var pa = $('panelArt'); pa.src = 'assets/art/' + s.art + '.jpg'; pa.alt = s.sign + ' artwork';
+    dotEls.forEach(function (d, j) { d.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+    var on = bdFlip ? bdA : bdB, off = bdFlip ? bdB : bdA; bdFlip = !bdFlip;
+    on.src = 'assets/space/' + s.bg + '.jpg'; on.style.opacity = 1; off.style.opacity = 0;
+    if (i < 12) { seen[i] = 1; if (!unlocked && Object.keys(seen).length === N) unlock(); }
+  }
+  function unlock() {
+    if (unlocked) return; unlocked = true; dotEls[12].hidden = false;
+    $('hint').textContent = 'A thirteenth sign has appeared at the centre of the wheel.';
+  }
+  function go(i) {
+    if (i === 12) { if (!unlocked) return; onXIII = true; show(); return; }
+    onXIII = false;
+    var cur = ((k % N) + N) % N, d = i - cur; if (d > N / 2) d -= N; if (d < -N / 2) d += N;
+    k += d; rotTarget = -k * STEP; show();
+  }
+  function stepBy(d) { if (onXIII) { onXIII = false; show(); return; } k += d; rotTarget = -k * STEP; show(); }
+  $('prev').addEventListener('click', function () { stepBy(-1); });
+  $('next').addEventListener('click', function () { stepBy(1); });
+  var rotTarget = 0, rot = 0;
+
+  // ---------- scroll state ----------
+  var tWheel = 0, heroVis = 1;
+  function measure() {
+    var vh = window.innerHeight, r = $('wheel').getBoundingClientRect();
+    var mid = r.top + r.height / 2;
+    tWheel = Math.max(0, Math.min(1, 1 - Math.abs(mid - vh / 2) / (vh * 0.75)));
+    heroVis = Math.max(0, Math.min(1, 1 - window.scrollY / (vh * 0.8)));
+    $('bdHero').style.opacity = heroVis;
+    bdA.parentNode.style.setProperty('--t', tWheel);
+    bdA.style.visibility = bdB.style.visibility = tWheel > 0.02 ? 'visible' : 'hidden';
+    var stage = $('stage'); if (stage) stage.style.opacity = Math.max(heroVis, Math.min(1, tWheel * 1.6));
+  }
+  window.addEventListener('scroll', measure, { passive: true });
+  window.addEventListener('resize', measure);
+  document.addEventListener('keydown', function (e) {
+    if (tWheel < 0.6) return;
+    if (e.key === 'ArrowLeft') { stepBy(-1); } else if (e.key === 'ArrowRight') { stepBy(1); }
+  });
+  show(); measure();
+
+  // ---------- 3D stage ----------
+  var canvas = $('stage'), renderer = null;
+  try {
+    if (!window.THREE) throw new Error('three.js did not load');
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  } catch (err) { document.documentElement.classList.add('no-webgl'); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 400);
+
+  // stars
+  (function () {
+    var n = 2600, pos = new Float32Array(n * 3);
+    for (var i = 0; i < n; i++) {
+      var r = 60 + Math.random() * 90, u = Math.random() * 2 - 1, a = Math.random() * 6.283, q = Math.sqrt(1 - u * u);
+      pos[i * 3] = r * q * Math.cos(a); pos[i * 3 + 1] = r * u; pos[i * 3 + 2] = r * q * Math.sin(a);
+    }
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var stars = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xcfd6ff, size: 0.28, sizeAttenuation: true, transparent: true, opacity: 0.75 }));
+    stars.name = 'stars'; scene.add(stars);
+  })();
+
+  var rig = new THREE.Group(); scene.add(rig);       // moves and tilts the whole wheel
+  var wheel = new THREE.Group(); rig.add(wheel);     // spins
+  var loader = new THREE.TextureLoader();
+  function tex(name) { var t = loader.load('assets/art/' + name + '.jpg'); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t; }
+  var cardGeo = new THREE.PlaneGeometry(2.4, 3.2), cards = [];
+  for (var i = 0; i < N; i++) {
+    var a = i * STEP;
+    var m = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex(S[i].art), side: THREE.DoubleSide }));
+    m.position.set(Math.sin(a) * R, 0, Math.cos(a) * R); m.rotation.y = a; m.userData.i = i;
+    wheel.add(m); cards.push(m);
+  }
+  // the track under the cards, with one coloured point per sign
+  (function () {
+    var pts = []; for (var j = 0; j <= 128; j++) { var a = j / 128 * 6.283; pts.push(new THREE.Vector3(Math.sin(a) * R, -1.95, Math.cos(a) * R)); }
+    wheel.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xD8C9A3, transparent: true, opacity: 0.35 })));
+    var p = new Float32Array(N * 3), c = new Float32Array(N * 3), col = new THREE.Color();
+    for (var j2 = 0; j2 < N; j2++) { var a2 = j2 * STEP; p[j2 * 3] = Math.sin(a2) * R; p[j2 * 3 + 1] = -1.95; p[j2 * 3 + 2] = Math.cos(a2) * R; col.set(S[j2].c); c[j2 * 3] = col.r; c[j2 * 3 + 1] = col.g; c[j2 * 3 + 2] = col.b; }
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('color', new THREE.BufferAttribute(c, 3));
+    wheel.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.22, vertexColors: true })));
+  })();
+  // the machine core: a sphere of points inside three tilted rings
+  var core = new THREE.Group(); rig.add(core);
+  (function () {
+    var n = 1500, pos = new Float32Array(n * 3), ga = Math.PI * (3 - Math.sqrt(5));
+    for (var j = 0; j < n; j++) { var y = 1 - (j / (n - 1)) * 2, q = Math.sqrt(1 - y * y), th = ga * j; pos[j * 3] = Math.cos(th) * q * 1.5; pos[j * 3 + 1] = y * 1.5; pos[j * 3 + 2] = Math.sin(th) * q * 1.5; }
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    core.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xE5D6A8, size: 0.045, transparent: true, opacity: 0.9 })));
+    core.add(new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.5, 1)), new THREE.LineBasicMaterial({ color: 0xD8C9A3, transparent: true, opacity: 0.16 })));
+    [2.1, 2.5, 2.9].forEach(function (rad, j) {
+      var pts = []; for (var q2 = 0; q2 <= 96; q2++) { var a = q2 / 96 * 6.283; pts.push(new THREE.Vector3(Math.cos(a) * rad, 0, Math.sin(a) * rad)); }
+      var ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xD8C9A3, transparent: true, opacity: 0.4 }));
+      ring.rotation.set(0.5 + j * 0.9, j * 0.7, 0.3 * j); ring.userData.spin = 0.12 + j * 0.07; core.add(ring);
+    });
+  })();
+  var coreHit = new THREE.Mesh(new THREE.SphereGeometry(1.9, 12, 12), new THREE.MeshBasicMaterial({ visible: false })); rig.add(coreHit);
+  // the thirteenth card waits inside the core
+  var xiii = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex('ophiuchus'), side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+  xiii.scale.setScalar(0.01); rig.add(xiii);
+
+  var narrow = false;
+  function resize() {
+    var w = window.innerWidth, h = window.innerHeight; narrow = w / h < 0.9;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize); resize();
+
+  // pointer: drag to spin, click a card to choose it, click the core to wake the thirteenth
+  var ray = new THREE.Raycaster(), v2 = new THREE.Vector2(), drag = null;
+  canvas.addEventListener('pointerdown', function (e) {
+    if (tWheel < 0.6) return; drag = { x: e.clientX, y: e.clientY, r: rotTarget, moved: 0 };
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!drag) return; var dx = e.clientX - drag.x; drag.moved = Math.max(drag.moved, Math.abs(dx), Math.abs(e.clientY - drag.y));
+    if (Math.abs(dx) > 6 && !onXIII) rotTarget = drag.r + dx * 0.006;
+  });
+  window.addEventListener('pointerup', function (e) {
+    if (!drag) return; var d = drag; drag = null;
+    if (d.moved > 6) { if (!onXIII) { k = Math.round(-rotTarget / STEP); rotTarget = -k * STEP; show(); } return; }
+    v2.set(e.clientX / window.innerWidth * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1); ray.setFromCamera(v2, camera);
+    var hit = ray.intersectObjects(cards.concat([coreHit, xiii]))[0]; if (!hit) return;
+    if (hit.object === coreHit || hit.object === xiii) { unlock(); go(12); }
+    else go(hit.object.userData.i);
+  });
+  window.addEventListener('pointercancel', function () { drag = null; });
+
+  var clock = new THREE.Clock(), look = new THREE.Vector3(), wasAuto = false;
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function frame() {
+    requestAnimationFrame(frame);
+    var dt = Math.min(clock.getDelta(), 0.05), t = tWheel, ease = reduce ? 1 : 1 - Math.pow(0.001, dt);
+    if (parseFloat(canvas.style.opacity || '1') < 0.02) return;
+    var auto = t < 0.35 && !drag && !reduce;
+    if (auto) { rotTarget += dt * 0.12; k = Math.round(-rotTarget / STEP); }
+    else if (wasAuto) { k = Math.round(-rotTarget / STEP); rotTarget = -k * STEP; show(); }   // arriving at the wheel: settle on the nearest card
+    wasAuto = auto;
+    var want = onXIII ? -(k + 0.5) * STEP : rotTarget;
+    rot = lerp(rot, want, reduce ? 1 : 1 - Math.pow(0.0005, dt)); wheel.rotation.y = rot;
+    // camera and rig pose: far and tilted for the title, close and level for the wheel
+    var cz = narrow ? 20 : 16.5;
+    var wx = narrow ? 0 : Math.max(1.5, Math.min(4.6, camera.aspect * 0.414 * (cz - R) - 1.7)), wy = narrow ? 3.0 : 0.1;
+    rig.position.set(lerp(narrow ? 0 : 7.2, wx, t), lerp(narrow ? -7.6 : -2.6, wy, t), 0);
+    rig.rotation.x = lerp(0.34, 0.03, t);
+    camera.position.set(0, lerp(2.4, 0.5, t), lerp(narrow ? 34 : 25, cz, t));
+    look.set(0, lerp(0.4, 0.2, t), 0); camera.lookAt(look);
+    // light the cards by how directly they face the viewer
+    for (var j = 0; j < N; j++) {
+      var f = Math.cos(j * STEP + rot), b = 0.22 + 0.78 * Math.pow(Math.max(0, f), 2.2);
+      if (onXIII) b *= 0.45;
+      cards[j].material.color.setScalar(b);
+    }
+    core.rotation.y += dt * 0.25; core.children.forEach(function (c) { if (c.userData.spin) c.rotation.z += dt * c.userData.spin; });
+    // the thirteenth card: hidden, then floating in the core, then forward when chosen
+    var ts = !unlocked ? 0.01 : onXIII ? 1.12 : 0.42, tz = onXIII ? R + 0.5 : 0, to = unlocked ? 1 : 0;
+    xiii.scale.setScalar(lerp(xiii.scale.x, ts, ease)); xiii.position.z = lerp(xiii.position.z, tz, ease);
+    xiii.material.opacity = lerp(xiii.material.opacity, to, ease); xiii.rotation.y = onXIII ? lerp(xiii.rotation.y, 0, ease) : xiii.rotation.y + dt * 0.5;
+    var st = scene.getObjectByName('stars'); if (st && !reduce) st.rotation.y += dt * 0.004;
+    renderer.render(scene, camera);
+  }
+  frame();
+})();
+</script>
