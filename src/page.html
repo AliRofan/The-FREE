@@ -35,7 +35,7 @@ button { font: inherit; color: inherit; }
 #backdrop img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
 #bdHero { object-position: center bottom; }
 #bdSeason { position: absolute; inset: 0; opacity: 0; }
-#bdSeason img { object-position: right bottom; opacity: 0; transition: opacity 700ms ease; }
+#bdSeason img { object-position: right bottom; opacity: 0; transition: opacity 1300ms ease; }
 #bdSeason::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,6,10,0.9), rgba(5,6,10,0.55) 34%, rgba(5,6,10,0) 62%); }
 #stage { z-index: 1; display: block; }
 .no-webgl #stage { display: none; }
@@ -53,16 +53,22 @@ main { position: relative; z-index: 2; pointer-events: none; }
 
 /* title page: centred, few words */
 .hero { min-height: 100vh; min-height: 100svh; display: flex; justify-content: center; text-align: center; }
-.hero .wrap { width: 100%; padding-block: clamp(120px, 22vh, 230px) 48px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.hero .wrap { width: 100%; padding-block: clamp(76px, 9vh, 110px) 48px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .hero h1 { font-weight: 500; font-size: clamp(46px, 10.5vw, 150px); letter-spacing: 0.16em; margin-right: -0.16em; line-height: 1; white-space: nowrap; }
 .hero .sub { font-family: var(--display); font-size: clamp(21px, 3vw, 38px); color: var(--soft); }
 .cta { pointer-events: auto; margin-top: 14px; padding: 12px 26px; border: 1px solid var(--gold); border-radius: 999px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); background: rgba(5,6,10,0.4); }
+.studio { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.hero .studio { margin-bottom: clamp(10px, 3vh, 34px); }
+.studio span { font-size: 11px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--dim); }
+.studio b { font-family: var(--display); font-weight: 600; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
+.studio img { height: 54px; width: auto; }
 .cta:hover { background: var(--gold); color: var(--space); }
 
 /* text bands */
 .band { pointer-events: auto; background: linear-gradient(180deg, rgba(5,6,10,0), var(--space) 90px, var(--space) calc(100% - 90px), rgba(5,6,10,0)); }
 .band .wrap { padding-block: clamp(110px, 16vh, 170px); display: flex; flex-direction: column; gap: 40px; }
 .band h2 { font-size: clamp(34px, 5vw, 64px); line-height: 1.08; max-width: 18em; }
+.lead { font-size: clamp(18px, 2vw, 22px); line-height: 1.6; color: var(--soft); max-width: 38em; }
 .statement { font-family: var(--display); font-weight: 500; font-size: clamp(28px, 4.2vw, 54px); line-height: 1.2; max-width: 22em; }
 .grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 .cell { border-top: 1px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
@@ -138,7 +144,9 @@ main { position: relative; z-index: 2; pointer-events: none; }
 .soon { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; align-self: flex-start; }
 
 footer { position: relative; z-index: 2; background: var(--space); border-top: 1px solid var(--line); }
-footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 6px; color: var(--dim); font-size: 13px; }
+footer .studio { margin: 0 0 10px; }
+footer .replay { margin-top: 14px; font-size: 11px; padding: 8px 16px; color: var(--soft); }
+footer .wrap { padding-block: 40px calc(36px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; color: var(--dim); font-size: 13px; }
 
 @media (max-width: 760px) {
   .pin { align-items: flex-end; }
@@ -150,6 +158,46 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   .controls { gap: 8px; }
   #bdSeason::after { background: none; }
 }
+/* ---------- cinema: the opening, the grain, the slow reveals ---------- */
+#curtain { position: fixed; inset: 0; z-index: 1; background: #000; pointer-events: none; opacity: 0; }      /* a black veil the wheel chapter rises out of */
+@keyframes curtain { from { opacity: 1; } to { opacity: 0; } }
+#bdHero { display: none; }      /* the title page is pure black: a star is born on it instead */
+@keyframes push { from { transform: scale(1.16); } to { transform: scale(1); } }
+#grain { position: fixed; inset: -60px; z-index: 3; pointer-events: none; opacity: 0.07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(6) infinite; }
+@keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-22px, 14px); } 40% { transform: translate(16px, -26px); } 60% { transform: translate(-30px, -8px); } 80% { transform: translate(24px, 20px); } 100% { transform: translate(0, 0); } }
+#vignette { position: fixed; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 52%, rgba(0,0,0,0.5) 100%); }
+/* the opening: studio, then the planet, then the title */
+.play .hero .studio img { animation: smoke 2.8s ease 8.8s both; }
+.play .hero .studio span { animation: fade 2.2s ease 10s both; }
+.play .hero .eyebrow { animation: track 3.2s cubic-bezier(.2,.7,.2,1) 10.6s both; }
+.play .hero h1 { animation: title 4.4s cubic-bezier(.16,.7,.2,1) 11.4s both, glint 3.2s ease-in-out 15.6s both;
+  background: linear-gradient(100deg, var(--ink) 42%, #ffffff 50%, var(--ink) 58%) 120% 0 / 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.play .hero .sub { animation: smoke 3s ease 13.8s both; }
+.play .hero .cta { animation: smoke 2.6s ease 15.2s both; }
+.play .nav { animation: fade 2.2s ease 16s both; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes smoke { from { opacity: 0; filter: blur(20px); transform: translateY(12px) scale(1.05); } 60% { filter: blur(4px); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
+@keyframes track { from { opacity: 0; letter-spacing: 0.6em; } }
+@keyframes title { from { opacity: 0; letter-spacing: 0.34em; filter: blur(22px); transform: scale(1.07); } 55% { filter: blur(5px); } }
+@keyframes glint { from { background-position: 120% 0; } to { background-position: -40% 0; } }
+/* until the opening starts, the stage is dark and empty; it starts once the page has loaded and is on screen */
+html:not(.play):not(.skip-intro) .hero .studio, html:not(.play):not(.skip-intro) .hero .eyebrow, html:not(.play):not(.skip-intro) .hero h1, html:not(.play):not(.skip-intro) .hero .sub, html:not(.play):not(.skip-intro) .hero .cta, html:not(.play):not(.skip-intro) .nav { opacity: 0; }
+.skip-intro .nav, .skip-intro .hero .studio img, .skip-intro .hero .studio span, .skip-intro .hero .eyebrow, .skip-intro .hero h1, .skip-intro .hero .sub, .skip-intro .hero .cta { animation: none; }
+/* text arrives slowly as each chapter comes into view */
+.js .rv { opacity: 0; transform: translateY(26px); filter: blur(12px) brightness(0); transition: opacity 1.9s ease, transform 1.9s cubic-bezier(.2,.7,.2,1), filter 1.9s ease; }      /* out of pure black */
+.js .rv.in { opacity: 1; transform: none; filter: none; }
+/* each season's words rise in as the wheel settles */
+.panel.flip > .eyebrow, .panel.flip > h2, .panel.flip > .hook, .panel.flip > .text, .panel.flip > .led { animation: fadeUp 0.9s ease both; }
+.panel.flip > h2 { animation-delay: 0.08s; } .panel.flip > .hook { animation-delay: 0.18s; } .panel.flip > .text { animation-delay: 0.28s; } .panel.flip > .led { animation-delay: 0.38s; }
+.modal { animation: fade 0.5s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  #grain { display: none; }
+  .nav, .hero .studio img, .hero .studio span, .hero .eyebrow, .hero h1, .hero .sub, .hero .cta, .panel.flip > *, .modal { animation: none !important; }
+  .js .rv { opacity: 1; transform: none; filter: none; transition: none; }
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } #bdSeason img { transition: none; } }
 </style>
 
@@ -158,6 +206,9 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   <div id="bdSeason"><img id="bdA" alt=""><img id="bdB" alt=""></div>
 </div>
 <canvas id="stage" aria-hidden="true"></canvas>
+<div id="curtain" aria-hidden="true"></div>
+<div id="vignette" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
 
 <header class="nav">
   <nav aria-label="Sections">
@@ -171,6 +222,7 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
 <main>
 <section class="hero" id="top">
   <div class="wrap">
+    <p class="studio"><img src="assets/logo.png" alt="Xcalibur Studio" width="900" height="248"><span>presents</span></p>
     <p class="eyebrow">A saga in twelve seasons</p>
     <h1>THE F.R.E.E.</h1>
     <p class="sub">The First Robotic Empire of Earth</p>
@@ -181,11 +233,13 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
 <section class="band" id="story">
   <div class="wrap">
     <p class="eyebrow">The story</p>
-    <p class="statement">A hidden cult topples the most powerful woman on Earth. She turns outlaw to bring it down, and starts a war over who inherits the planet: its people, its tyrants or its machines.</p>
+    <p class="statement">The F.R.E.E. is the story of how the First Robotic Empire of Earth came to exist.</p>
+    <p class="lead">A hidden cult topples the most powerful woman on Earth. She turns outlaw, and the only people who will stand with her are a crew of teenage rebels. What they start together ends with the planet in new hands.</p>
+    <h2>Three forces.</h2>
     <div class="grid">
       <div class="cell"><p class="tag">The old order</p><h3>The Federation</h3><p>A world at peace under President Julia. One attack on a space center ends her presidency, and the peace with it.</p></div>
       <div class="cell"><p class="tag">The hidden hand</p><h3>The Red Circle</h3><p>A cult of the powerful, led by Victor Taipan. It exists to destroy Julia’s legacy and to rule whatever comes after.</p></div>
-      <div class="cell"><p class="tag">What comes next</p><h3>The Free</h3><p>The First Robotic Empire of Earth. A thousand ships, a people in white cloaks, and machines that will outgrow their makers.</p></div>
+      <div class="cell"><p class="tag">The rebels</p><h3>The Silver Scorpios</h3><p>A rebellious team of teenage fighters. Julia frees them and they become her crew: fast, fearless, and loyal to each other before anyone else. They fight because this is where they stand.</p></div>
     </div>
   </div>
 </section>
@@ -269,17 +323,19 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
 
 <footer>
   <div class="wrap">
-    <p>The F.R.E.E. © 2026 Ario Rofan. All rights reserved.</p>
+    <p class="studio"><span>Created by</span><img src="assets/logo.png" alt="Xcalibur Studio" width="900" height="248"></p>
+    <p>The F.R.E.E. © 2026 Xcalibur Studio. All rights reserved.</p>
+    <button class="pill replay" id="replay" type="button">Replay the opening</button>
     <p>Planet, Sun, Moon, Earth and nebula photographs: NASA.</p>
   </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-(function () {
+function startFree() {
   'use strict';
   var S = [
-    { n: '01', sign: 'Scorpio', planet: 'Mars', art: 'scorpio', bg: 's01', c: '#F0A6A6', title: 'Free the Silver Scorpio', hook: 'She lost the world. She kept the sting.', lead: 'Julia', text: 'An attack on the space center costs President Julia her office, her allies and her good name. Hunted by a hidden cult, she turns outlaw and frees a crew of life prisoners for one great heist.' },
+    { n: '01', sign: 'Scorpio', planet: 'Mars', art: 'scorpio', bg: 's01', c: '#F0A6A6', title: 'Free the Silver Scorpio', hook: 'She lost the world. She kept the sting.', lead: 'Julia', text: 'An attack on the space center costs President Julia her office, her allies and her good name. Hunted by a hidden cult, she turns outlaw and frees the Silver Scorpios, a crew of teenage rebels, for one great heist.' },
     { n: '02', sign: 'Capricorn', planet: 'Saturn', art: 'capricorn', bg: 's02', c: '#B9CFE0', title: 'The Federation Collapses', hook: 'A father’s silence, twenty years deep.', lead: 'John', text: 'The Silver Scorpios rob the most dangerous man alive and find the wrong secret. It belongs to the Attorney General, and it is enough to bring the old order down.' },
     { n: '03', sign: 'Leo', planet: 'the Sun', art: 'leo', bg: 's03', c: '#F2CD7A', title: 'The Grand Betrayal', hook: 'Two kings. One crown.', lead: 'Hunter', text: 'With the Federation gone, the two men who broke it turn on each other. Everyone must choose a side, and the heir raised by one of them holds the proof that could finish him.' },
     { n: '04', sign: 'Aries', planet: 'Mars', art: 'aries', bg: 's04', c: '#FFB38A', title: 'World War IV', hook: 'The war that redraws the map.', lead: 'Taipan', text: 'A tyrant ignites a global war and wins battle after battle. The banished regroup and fight back across the world, racing to find the one weapon that can end it.' },
@@ -304,13 +360,28 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     ['Kate', 'Virgo · the loyal one', 'virgo', 7, 'Julia’s protector. When Earth falls she takes the war underground.', 'The agent who stays at Julia’s side when everyone else steps away. Precise, tireless and loyal past the point of safety.', 'From bodyguard to commander of the underground, holding Earth together after the ships have gone.'],
     ['Jackie', 'Sagittarius · the wit', 'sagittarius', 9, 'An engineer who is quick with a joke. He brings the one ship home.', 'Harry’s engineer. He can fly or fix almost anything, and he is quick with a joke when things are at their worst.', 'From the lab to the long voyage and back again, bringing home the one ship that turns around.'],
     ['Nate', 'Pisces · the dreamer', 'pisces', 6, 'An orphan who wins his place on the voyage with a dare.', 'An orphan with no schooling, no money and a sister he cannot save on his own. He talks his way onto the fleet with a bet nobody believes he can win.', 'From the streets to the stars, and then to leading a colony of the young on a new world.'],
-    ['Natalie', 'Aquarius · the rebel', 'aquarius', 10, 'A Silver Scorpio. She runs the last heist.', 'One of the Silver Scorpios, the crew of life prisoners Julia frees in the first season. She thinks several moves ahead of everyone in the room.', 'From prisoner to outlaw to the mind behind the final heist.'],
+    ['Natalie', 'Aquarius · the rebel', 'aquarius', 10, 'A Silver Scorpio. She runs the last heist.', 'One of the Silver Scorpios, the crew of teenage rebels Julia frees in the first season. She thinks several moves ahead of everyone in the room.', 'From prisoner to outlaw to the mind behind the final heist.'],
     ['Ask', 'Taurus · the healer', 'taurus', 8, 'Cargo unit ASK-13. He is learning faster than anyone planned.', 'A cargo robot on the new planet, serial ASK-13. He teaches himself from the servers of the abandoned ships and becomes Nate’s closest friend.', 'From carrying crates to healing a colony. He is still learning, and no one knows where it ends.'],
-    ['The Silver Scorpios', 'The crew', 'scorpio', 0, 'Life prisoners turned outlaws. They fight because this is where they stand.', 'A crew of life prisoners held on a secret island and written off by the world. Julia breaks them out because she needs people with nothing left to lose.', 'From prisoners to outlaws to legends.']
+    ['The Silver Scorpios', 'The crew', 'scorpio', 0, 'Teenage rebels turned outlaws. They fight because this is where they stand.', 'A rebellious team of teenage fighters, locked away and written off by the world. Julia breaks them out because she needs people with nothing left to lose, and they become the heart of her fight.', 'From prisoners to outlaws to legends.']
   ];
   var $ = function (id) { return document.getElementById(id); };
+  // the opening plays once the page has fully loaded and is actually on screen, and only from the top of the page
+  var root = document.documentElement, reduceIntro = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var introStart = null;      // null: not begun; a time: playing; -1: skipped, show the finished star
+  function playIntro(force) {
+    root.classList.remove('play', 'skip-intro');
+    if (reduceIntro || (force !== true && window.scrollY > 40)) { root.classList.add('skip-intro'); introStart = -1; return; }
+    void root.offsetWidth; root.classList.add('play'); introStart = performance.now();
+  }
+  function whenReady() {
+    if (document.readyState !== 'complete') { window.addEventListener('load', whenReady, { once: true }); return; }
+    if (document.visibilityState !== 'visible') { document.addEventListener('visibilitychange', whenReady, { once: true }); return; }
+    requestAnimationFrame(function () { requestAnimationFrame(playIntro); });
+  }
+  whenReady();
+  setTimeout(function () { if (!root.classList.contains('play') && !root.classList.contains('skip-intro')) playIntro(); }, 6000);      // never leave the title hidden
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var N = 12, STEP = Math.PI * 2 / N, R = 7, LAST = 12;
+  var N = 13, STEP = Math.PI * 2 / N, R = 7, LAST = 12;   // thirteen cards on the wheel: twelve seasons and the hidden sign
   var cur = -1;          // the stop now shown: 0 to 11 are the seasons, 12 is the thirteenth
   var f = 0;             // scroll position through the wheel, 0 to 12, eased toward each stop
   var tWheel = 0;        // 0 when the wheel chapter is off screen, 1 when it is pinned
@@ -372,6 +443,7 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     dotEls.forEach(function (d, j) { d.setAttribute('aria-current', j === i ? 'true' : 'false'); });
     var on = bdFlip ? bdA : bdB, off = bdFlip ? bdB : bdA; bdFlip = !bdFlip;
     on.src = 'assets/space/' + s.bg + '.jpg'; on.style.opacity = 1; off.style.opacity = 0;
+    var pn = $('panel'); pn.classList.remove('flip'); void pn.offsetWidth; pn.classList.add('flip');
     $('hint').textContent = i === LAST ? 'The thirteenth sign. Keep scrolling to go on.' : i === 0 ? 'Scroll to turn the wheel.' : '';
   }
   function go(i) {
@@ -379,11 +451,21 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     var top = section.getBoundingClientRect().top + window.scrollY, travel = section.offsetHeight - window.innerHeight;
     window.scrollTo({ top: top + travel * i / LAST + 1, behavior: reduce ? 'auto' : 'smooth' });
   }
+  $('replay').addEventListener('click', function () { root.style.scrollBehavior = 'auto'; window.scrollTo(0, 0); root.style.scrollBehavior = ''; playIntro(true); });
   $('prev').addEventListener('click', function () { go(cur - 1); });
   $('next').addEventListener('click', function () { go(cur + 1); });
 
   // ---------- scroll drives everything ----------
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+  var heroWrap = document.querySelector('.hero .wrap');
+  if ('IntersectionObserver' in window && !reduce) {      // slow reveals for everything below the title
+    document.documentElement.classList.add('js');
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.01 });
+    Array.prototype.forEach.call(document.querySelectorAll('.band .wrap > :not(.grid):not(.cast), .band .cell, .band .who'), function (el) {
+      var sib = Array.prototype.indexOf.call(el.parentNode.children, el);
+      el.classList.add('rv'); el.style.transitionDelay = (el.matches('.cell, .who') ? (sib % 4) * 110 : 0) + 'ms'; io.observe(el);
+    });
+  }
   function measure() {
     var vh = window.innerHeight, r = section.getBoundingClientRect(), travel = r.height - vh;
     var raw = clamp01(-r.top / travel) * LAST, whole = Math.floor(raw), frac = raw - whole;
@@ -391,7 +473,11 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     f = Math.min(LAST, whole + frac);
     tWheel = Math.min(clamp01(1 - r.top / vh), clamp01(r.bottom / vh));
     $('bdHero').style.opacity = clamp01(1 - window.scrollY / (vh * 0.8));
+    var hv = clamp01(1 - window.scrollY / (vh * 0.55)); heroWrap.style.opacity = hv; heroWrap.style.transform = 'translateY(' + (-(1 - hv) * 70) + 'px)';      // the title drifts up and fades as you leave it
     $('bdSeason').style.opacity = tWheel;
+    // the wheel chapter rises out of black and sinks back into it
+    $('curtain').style.opacity = tWheel <= 0 ? 0 : tWheel < 0.25 ? tWheel / 0.25 : clamp01(1 - (tWheel - 0.25) / 0.6);
+    $('panel').style.opacity = clamp01((tWheel - 0.7) / 0.3);
     show(Math.round(raw));
   }
   window.addEventListener('scroll', measure, { passive: true });
@@ -404,7 +490,11 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   measure();
 
   // ---------- 3D stage ----------
-  var canvas = $('stage'), renderer = null;
+  // start from a fresh canvas every time this script runs, so a page that is updated while open does not reuse a dead 3D context
+  var gen = window.__freeGen = (window.__freeGen || 0) + 1;
+  document.documentElement.classList.remove('no-webgl');
+  var oldCanvas = $('stage'), canvas = oldCanvas.cloneNode(false); oldCanvas.parentNode.replaceChild(canvas, oldCanvas);
+  var renderer = null;
   try {
     if (!window.THREE) throw new Error('three.js did not load');
     renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
@@ -454,7 +544,7 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
     return new THREE.Points(g, new THREE.PointsMaterial({ size: size, map: dotTex, vertexColors: true, blending: ADD, transparent: true, depthWrite: false }));
   }
-  // ----- the digital sun: a breathing body of points, flames, flare lines and neon orbits -----
+  // ----- the digital sun: a breathing body of points, flames and flare lines -----
   var sun = new THREE.Group(); rig.add(sun);
   var SR = 2.1, nB = 2400, body = pts(nB, 0.085), bDir = new Float32Array(nB * 3); sun.add(body);
   (function () {
@@ -470,31 +560,57 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   flares.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nS * 6), 3));
   for (var q3 = 0; q3 < nS; q3++) { var u3 = Math.random() * 2 - 1, a3 = Math.random() * 6.283, s3 = Math.sqrt(1 - u3 * u3); sDir[q3 * 3] = s3 * Math.cos(a3); sDir[q3 * 3 + 1] = u3; sDir[q3 * 3 + 2] = s3 * Math.sin(a3); sP[q3 * 2] = Math.random() * 6.283; sP[q3 * 2 + 1] = 0.8 + Math.random() * 2.4; }
   var cage = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(SR * 1.12, 1)), new THREE.LineBasicMaterial({ color: 0x6FE8FF, blending: ADD, transparent: true, opacity: 0.22, depthWrite: false })); sun.add(cage);
-  var TAIL = 18, BEADS = 3, orbits = [[3.1, 0x5CF2FF, 1.2, 0.0, 0.2, 0.95], [3.6, 0xFF5CD6, 0.5, 0.8, 1.0, -0.75], [4.1, 0xFFD86B, 1.9, 0.3, -0.6, 0.6], [4.6, null, 0.25, 1.4, 0.5, -0.45]].map(function (o) {
-    var g = new THREE.Group(); g.rotation.set(o[2], o[3], o[4]); sun.add(g);
-    var ring = []; for (var q = 0; q <= 128; q++) { var a = q / 128 * 6.283; ring.push(new THREE.Vector3(Math.cos(a) * o[0], 0, Math.sin(a) * o[0])); }
-    var line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ring), new THREE.LineBasicMaterial({ color: o[1] || 0xffffff, blending: ADD, transparent: true, opacity: 0.5, depthWrite: false })); g.add(line);
-    var beads = pts(TAIL * BEADS, 0.3), col = beads.geometry.attributes.color.array; g.add(beads);
-    for (var b = 0; b < BEADS; b++) for (var j = 0; j < TAIL; j++) { var k = Math.pow(1 - j / TAIL, 2.2), ix = (b * TAIL + j) * 3; col[ix] = col[ix + 1] = col[ix + 2] = j === 0 ? 1.6 : k; }
-    if (o[1]) beads.material.color.set(o[1]);
-    return { g: g, r: o[0], sp: o[5], line: line, beads: beads, themed: !o[1] };
+  // ----- the black ring: a band of obsidian glass around the sun, plain and wide -----
+  var bandGeo = new THREE.TorusGeometry(3.55, 0.2, 28, 220); bandGeo.scale(1, 1, 3.6); bandGeo.computeVertexNormals();      // a flat band, not a round tube
+  var bandMat = new THREE.ShaderMaterial({
+    uniforms: { time: { value: 0 }, theme: { value: new THREE.Color(S[0].c) } },
+    vertexShader: 'varying vec2 vUv; varying vec3 vN; varying vec3 vNo; varying vec3 vV; varying vec3 vP;' +
+      'void main(){ vUv = uv; vP = position; vNo = normal; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
+    fragmentShader: 'uniform float time; uniform vec3 theme; varying vec2 vUv; varying vec3 vN; varying vec3 vNo; varying vec3 vV; varying vec3 vP;' +
+      'void main(){ vec3 N = normalize(vN); vec3 V = normalize(vV);' +
+      ' float fres = pow(1.0 - abs(dot(N, V)), 3.0);' +
+      ' vec3 col = vec3(0.006, 0.007, 0.011) + fres * vec3(0.20, 0.28, 0.40);' +                                   // black glass with a cold sheen at grazing angles
+      ' float inner = max(dot(normalize(vNo), -normalize(vec3(vP.xy, 0.0))), 0.0);' +
+      ' col += theme * pow(inner, 2.0) * 0.22 + vec3(1.0, 0.86, 0.6) * pow(inner, 7.0) * 0.18;' +                    // the inside face catches the sun
+      ' float spec = pow(max(dot(reflect(-normalize(vec3(-0.4, 0.8, 0.5)), N), V), 0.0), 60.0); col += spec * vec3(0.8, 0.9, 1.0) * 0.9;' +
+      ' gl_FragColor = vec4(col, 1.0); }'
   });
-  var coreHit = new THREE.Mesh(new THREE.SphereGeometry(SR * 1.3, 12, 12), new THREE.MeshBasicMaterial({ visible: false })); rig.add(coreHit);
-  var xiii = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex('ophiuchus'), alphaMap: roundMask, alphaTest: 0.05, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
-  xiii.scale.setScalar(0.01); rig.add(xiii);    // the thirteenth card waits inside the sun
-  // ----- the aura around the card in front: a glowing edge and sparks in the season's colour -----
-  var BIG = 1.25, aura = new THREE.Group(); aura.position.set(0, 0, R + 0.5); aura.scale.setScalar(BIG); rig.add(aura);
-  var edge = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 4.4), new THREE.MeshBasicMaterial({ blending: ADD, transparent: true, depthWrite: false, opacity: 0,
-    map: canvasTex(360, 440, function (g) { g.strokeStyle = '#fff'; g.shadowColor = '#fff'; [[46, 10], [26, 8], [12, 6], [4, 3]].forEach(function (v) { g.shadowBlur = v[0]; g.lineWidth = v[1]; rr(g, 60, 60, 240, 320, 22); g.stroke(); }); }) }));
-  edge.position.z = -0.03; aura.add(edge);
-  var nK = 90, sparks = pts(nK, 0.17), kU = new Float32Array(nK), kP = new Float32Array(nK * 3); sparks.position.z = 0.04; aura.add(sparks);
-  for (var q4 = 0; q4 < nK; q4++) { kU[q4] = Math.random(); kP[q4 * 3] = Math.random() * 6.283; kP[q4 * 3 + 1] = 1.5 + Math.random() * 3.5; kP[q4 * 3 + 2] = (Math.random() - 0.35) * 0.22; }
-  function edgePoint(u, off, out) {      // a point on the card's edge: u runs 0 to 1 around it
-    var hw = 1.2 + off, hh = 1.6 + off, d = (u % 1) * (4 * hw + 4 * hh);
-    if (d < 2 * hw) { out[0] = -hw + d; out[1] = hh; } else if (d < 2 * hw + 2 * hh) { out[0] = hw; out[1] = hh - (d - 2 * hw); }
-    else if (d < 4 * hw + 2 * hh) { out[0] = hw - (d - 2 * hw - 2 * hh); out[1] = -hh; } else { out[0] = -hw; out[1] = -hh + (d - 4 * hw - 2 * hh); }
+  var bandTilt = new THREE.Group(); sun.add(bandTilt);
+  var band = new THREE.Mesh(bandGeo, bandMat); bandTilt.add(band);
+  // a shining border on every card, in its own season's colour; it lights only while the card is in front
+  var BIG = 1.25, edgeGeo = new THREE.PlaneGeometry(3.6, 4.4), edges = [];
+  var edgeTex = canvasTex(360, 440, function (g) { g.strokeStyle = '#fff'; g.shadowColor = '#fff'; [[46, 10], [26, 8], [12, 6], [4, 3]].forEach(function (v) { g.shadowBlur = v[0]; g.lineWidth = v[1]; rr(g, 60, 60, 240, 320, 22); g.stroke(); }); });
+  cards.forEach(function (c, i) {
+    var e = new THREE.Mesh(edgeGeo, new THREE.MeshBasicMaterial({ map: edgeTex, color: S[i].c, blending: ADD, transparent: true, depthWrite: false, opacity: 0 }));
+    e.position.z = 0.02; e.visible = false; c.add(e); edges.push(e);
+  });
+  // ----- the opening: out of black a blue star ignites, bursts into a wave of dust and light, and is born again -----
+  scene.add(camera);
+  var intro = new THREE.Group(); intro.position.set(0, 0, -20); camera.add(intro);
+  function sstep(a, b, x) { x = clamp01((x - a) / (b - a)); return x * x * (3 - 2 * x); }
+  function spr(t, color) { var m = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, color: color, blending: ADD, transparent: true, depthWrite: false, depthTest: false, opacity: 0 })); intro.add(m); return m; }
+  var flareTex = canvasTex(256, 256, function (g) {
+    g.translate(128, 128); var d = g.createRadialGradient(0, 0, 0, 0, 0, 128); d.addColorStop(0, 'rgba(255,255,255,1)'); d.addColorStop(0.2, 'rgba(255,255,255,0.35)'); d.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = d;
+    [[1, 0.03], [0.03, 1], [0.6, 0.012], [0.012, 0.6]].forEach(function (v, i) { g.save(); if (i > 1) g.rotate(0.785); g.scale(v[0], v[1]); g.beginPath(); g.arc(0, 0, 128, 0, 6.283); g.fill(); g.restore(); });
+  });
+  var iFlash = spr(dotTex, 0xBFE2FF), iGlow = spr(dotTex, 0x3F9BFF), iFlare = spr(flareTex, 0x9FD4FF), iCore = spr(dotTex, 0xEAF6FF);
+  var wave = new THREE.Mesh(new THREE.RingGeometry(0.93, 1, 160), new THREE.MeshBasicMaterial({ color: 0x8FCBFF, blending: ADD, transparent: true, depthWrite: false, depthTest: false, opacity: 0, side: THREE.DoubleSide })); intro.add(wave);
+  function cloud(n, size, speedMin, speedMax, tint) {
+    var c = pts(n, size), dir = new Float32Array(n * 3), base = new Float32Array(n * 3); c.material.depthTest = false; c.frustumCulled = false; c.visible = false; intro.add(c);
+    for (var i = 0; i < n; i++) {
+      var u = Math.random() * 2 - 1, a = Math.random() * 6.283, q = Math.sqrt(1 - u * u), sp = speedMin + Math.pow(Math.random(), 2) * (speedMax - speedMin);
+      dir[i * 3] = q * Math.cos(a) * sp; dir[i * 3 + 1] = q * Math.sin(a) * sp; dir[i * 3 + 2] = u * sp * 0.45;
+      var r = Math.random(); tmpC.setRGB(0.55, 0.78, 1).lerp(white, r < 0.5 ? r : 0.2); if (r > 0.74) tmpC.setRGB(1, 0.72, 0.38);
+      base[i * 3] = tmpC.r * tint; base[i * 3 + 1] = tmpC.g * tint; base[i * 3 + 2] = tmpC.b * tint;
+    }
+    return { p: c, dir: dir, base: base, n: n };
   }
-
+  var sparks = cloud(5200, 0.17, 2, 30, 1), dustWave = cloud(800, 2.2, 1.5, 15, 0.16);
+  function blow(c, e, f) {
+    var pp = c.p.geometry.attributes.position.array, pc = c.p.geometry.attributes.color.array;
+    for (var i = 0; i < c.n * 3; i++) { pp[i] = c.dir[i] * e; pc[i] = c.base[i] * f; }
+    c.p.geometry.attributes.position.needsUpdate = true; c.p.geometry.attributes.color.needsUpdate = true;
+  }
   var narrow = false;
   function resize() {
     var w = window.innerWidth, h = window.innerHeight; narrow = w / h < 0.9;
@@ -507,46 +623,55 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   canvas.addEventListener('click', function (e) {
     if (tWheel < 0.95) return;
     v2.set(e.clientX / window.innerWidth * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1); ray.setFromCamera(v2, camera);
-    var hit = ray.intersectObjects(cards.concat([coreHit, xiii]))[0]; if (!hit) return;
-    go(hit.object === coreHit || hit.object === xiii ? LAST : hit.object.userData.i);
+    var hit = ray.intersectObjects(cards)[0]; if (hit) go(hit.object.userData.i);
   });
 
-  var clock = new THREE.Clock(), look = new THREE.Vector3(), rot = 0, x13 = 0, time = 0, xy = [0, 0];
+  var clock = new THREE.Clock(), look = new THREE.Vector3(), rot = 0, time = 0;
   function lerp(a, b, t) { return a + (b - a) * t; }
   function frame() {
+    if (window.__freeGen !== gen) return;      // a newer copy of this script has taken over
     requestAnimationFrame(frame);
     var dt = Math.min(clock.getDelta(), 0.05), ease = reduce ? 1 : 1 - Math.pow(0.0004, dt);
     if (!reduce) { stars.rotation.y += dt * 0.004; time += dt; }
+    var ti = introStart === null ? -1 : introStart < 0 ? 99 : (performance.now() - introStart) / 1000;
+    var hv3 = clamp01(1 - window.scrollY / (window.innerHeight * 0.7));
+    stars.material.opacity = ti < 0 ? 0 : 0.75 * sstep(8, 12, ti);      // the sky stays black until the star is born
+    intro.visible = ti >= 0 && hv3 > 0.01;
+    if (intro.visible) {
+      var born = sstep(1.0, 3.3, ti), bang = sstep(3.3, 3.5, ti), decay = 1 - sstep(3.5, 4.9, ti), reborn = sstep(8.0, 10.6, ti);
+      var flick = 1 + 0.08 * Math.sin(time * 9) + 0.05 * Math.sin(time * 23), lit = Math.min(1, born * decay + reborn) * hv3;
+      intro.position.y = -6 * sstep(7.6, 8.0, ti);      // the newborn star settles below the title
+      iCore.scale.setScalar(((0.5 * born + 6 * bang) * decay + 0.6 * reborn) * flick); iCore.material.opacity = lit;
+      iGlow.scale.setScalar((3 * born + 28 * bang) * decay + 3.4 * reborn * (1 + 0.06 * Math.sin(time * 1.7))); iGlow.material.opacity = 0.8 * lit;
+      iFlare.scale.setScalar(((5 * born + 44 * bang) * decay + 5.5 * reborn) * flick); iFlare.material.opacity = 0.9 * lit; iFlare.material.rotation = time * 0.04;
+      iFlash.scale.setScalar(130); iFlash.material.opacity = 0.9 * bang * (1 - sstep(3.5, 4.6, ti)) * hv3;
+      var wt = clamp01((ti - 3.35) / 4.2), we = 1 - Math.pow(1 - wt, 3);
+      wave.scale.setScalar(0.4 + we * 40); wave.material.opacity = ti > 3.35 ? Math.pow(1 - wt, 1.3) * 0.85 * hv3 : 0;
+      var on = ti > 3.3 && ti < 7.7; sparks.p.visible = dustWave.p.visible = on;
+      if (on) {
+        var bt = clamp01((ti - 3.3) / 4.2), dt2 = clamp01((ti - 3.3) / 4.3);
+        blow(sparks, 1 - Math.pow(1 - bt, 3), Math.pow(1 - bt, 1.6) * 1.4 * hv3);
+        blow(dustWave, 1 - Math.pow(1 - dt2, 2.2), Math.sin(dt2 * 3.1416) * hv3);
+      }
+    }
     rig.visible = tWheel > 0.01;
     if (rig.visible) {
       var t = tWheel * tWheel * (3 - 2 * tWheel);
-      // the last step of the scroll does not turn the wheel: it brings the thirteenth card out of the core
-      var turn = Math.min(f, 11), out = clamp01(f - 11);
-      rot = lerp(rot, -(turn + out * 0.5) * STEP, ease); wheel.rotation.y = rot;
-      x13 = lerp(x13, out, ease);
+      rot = lerp(rot, -f * STEP, ease); wheel.rotation.y = rot;
       var cz = narrow ? 20 : 16.5;
       var wx = narrow ? 0 : Math.max(1.2, Math.min(4.2, camera.aspect * 0.414 * (cz - R - 0.5) - 2.05)), wy = narrow ? 3.0 : -0.5;
       rig.position.set(wx, lerp(wy - 9, wy, t), 0); rig.rotation.x = lerp(0.3, 0.03, t);
       camera.position.set(0, 0.5, cz); look.set(0, 0.2, 0); camera.lookAt(look);
       themeTo.set(S[cur < 0 ? 0 : cur].c); theme.lerp(themeTo, reduce ? 1 : 1 - Math.pow(0.02, dt));
-      var gmax = 0;
-      for (var j = 0; j < N; j++) {      // the card facing the viewer is lit, larger and a little forward
-        var fr = Math.max(0, Math.cos(j * STEP + rot)), g = Math.pow(fr, 14) * (1 - x13), c = cards[j];
-        c.material.color.setScalar((0.22 + 0.78 * Math.pow(fr, 2.2)) * (1 - 0.55 * x13));
-        c.scale.setScalar(1 + (BIG - 1) * g); c.position.setLength(R + 0.5 * g); if (g > gmax) gmax = g;
+      for (var j = 0; j < N; j++) {      // the card facing the viewer is lit, larger, a little forward, and its border shines
+        var fr = Math.max(0, Math.cos(j * STEP + rot)), g = Math.pow(fr, 24), c = cards[j], e = edges[j];
+        c.material.color.setScalar(0.22 + 0.78 * Math.pow(fr, 2.2));
+        c.scale.setScalar(1 + (BIG - 1) * g); c.position.setLength(R + 0.5 * g);
+        e.visible = g > 0.01; e.material.opacity = g * (0.62 + 0.16 * Math.sin(time * 3.1));
       }
-      // the aura: strongest when a card has settled in front
-      var glow = Math.max(gmax, x13), kc = sparks.geometry.attributes.color.array, kp = sparks.geometry.attributes.position.array;
-      edge.material.color.copy(theme); edge.material.opacity = glow * (0.8 + 0.2 * Math.sin(time * 3.1));
-      for (var k = 0; k < nK; k++) {
-        kU[k] += dt * 0.012; edgePoint(kU[k], kP[k * 3 + 2], xy); kp[k * 3] = xy[0]; kp[k * 3 + 1] = xy[1];
-        var tw = Math.pow(0.5 + 0.5 * Math.sin(time * kP[k * 3 + 1] + kP[k * 3]), 7) * glow * 1.5;
-        tmpC.copy(theme).lerp(white, 0.45).multiplyScalar(tw); kc[k * 3] = tmpC.r; kc[k * 3 + 1] = tmpC.g; kc[k * 3 + 2] = tmpC.b;
-      }
-      sparks.geometry.attributes.position.needsUpdate = true; sparks.geometry.attributes.color.needsUpdate = true;
       // the digital sun
       var sy = narrow ? 0.9 : 3.3, ss = narrow ? 0.78 : 0.92, pulse = 1 + 0.05 * Math.sin(time * 1.3) + 0.02 * Math.sin(time * 7.1);
-      sun.position.y = sy; sun.scale.setScalar(ss); coreHit.position.y = sy; coreHit.scale.setScalar(ss);
+      sun.position.y = sy; sun.scale.setScalar(ss);
       var bp = body.geometry.attributes.position.array;
       for (var b1 = 0; b1 < nB; b1++) {      // the body breathes and ripples
         var dx = bDir[b1 * 3], dy = bDir[b1 * 3 + 1], dz = bDir[b1 * 3 + 2];
@@ -569,17 +694,14 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
       }
       flares.geometry.attributes.position.needsUpdate = true; flares.material.color.copy(theme).lerp(white, 0.3); flares.rotation.y -= dt * 0.12;
       halo1.material.color.copy(theme); halo1.scale.setScalar(11 * pulse); halo2.material.color.setRGB(1, 0.86, 0.6).lerp(theme, 0.25); halo2.scale.setScalar(4.4 * (2 - pulse));
+      bandMat.uniforms.time.value = time; bandMat.uniforms.theme.value.copy(theme);
+      bandTilt.rotation.set(1.18 + 0.1 * Math.sin(time * 0.11), time * 0.05, 0.22 * Math.sin(time * 0.07)); band.rotation.z = time * 0.06;      // it turns and leans very slowly
       cage.rotation.y += dt * 0.2; cage.rotation.x += dt * 0.07; cage.scale.set(1 + 0.07 * Math.sin(time * 2.0), 1 + 0.07 * Math.sin(time * 2.6 + 1), 1 + 0.07 * Math.sin(time * 1.9 + 2));
-      orbits.forEach(function (o, oi) {      // neon orbits, each with three bright beads and their tails
-        o.g.rotation.y += dt * 0.08 * (oi % 2 ? -1 : 1); if (o.themed) { o.line.material.color.copy(theme); o.beads.material.color.copy(theme); }
-        var op = o.beads.geometry.attributes.position.array, dir = o.sp > 0 ? 1 : -1;
-        for (var b = 0; b < BEADS; b++) for (var j2 = 0; j2 < TAIL; j2++) { var an = time * o.sp + b * 6.283 / BEADS - dir * j2 * 0.05, ix = (b * TAIL + j2) * 3; op[ix] = Math.cos(an) * o.r; op[ix + 1] = 0; op[ix + 2] = Math.sin(an) * o.r; }
-        o.beads.geometry.attributes.position.needsUpdate = true;
-      });
-      xiii.scale.setScalar(Math.max(0.01, BIG * x13)); xiii.position.set(0, sy * (1 - x13), (R + 0.5) * x13); xiii.material.opacity = clamp01(x13 * 3);
     }
     renderer.render(scene, camera);
   }
   frame();
-})();
+}
+// inside a Claude preview the page can be swapped while open, so start through its hook when there is one
+if (window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(startFree); else startFree();
 </script>

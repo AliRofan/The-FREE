@@ -22,5 +22,5 @@ All season text is in one list near the bottom of the page source, starting at `
 
 ## Credits
 
-Story and artwork © 2026 Ario Rofan. All rights reserved.
+Story and artwork © 2026 Xcalibur Studio. All rights reserved.
 Space photographs: NASA. The 3D scene uses three.js (MIT licence), loaded from cdnjs.
