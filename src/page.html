@@ -81,7 +81,7 @@ main { position: relative; z-index: 2; pointer-events: none; }
 .panel .text { color: var(--soft); max-width: 30em; }
 .led { font-size: 13px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
 .led b { color: var(--ink); font-weight: 600; }
-#panelArt { display: none; width: 180px; border-radius: 8px; }
+#panelArt { display: none; width: 180px; border-radius: 14px; }
 .no-webgl #panelArt { display: block; }
 .controls { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
 .arrow { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 1px solid var(--line); background: rgba(11,13,19,0.7); cursor: pointer; font-size: 18px; }
@@ -96,12 +96,45 @@ main { position: relative; z-index: 2; pointer-events: none; }
 
 /* cast */
 .cast { display: grid; gap: 28px 32px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
-.who { display: flex; gap: 16px; border-top: 1px solid var(--line); padding-top: 18px; min-width: 0; }
-.who img { width: 72px; height: 96px; object-fit: cover; border-radius: 5px; flex: none; }
-.who div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.who { display: flex; gap: 16px; border: 0; border-top: 1px solid var(--line); padding: 18px 0 0; min-width: 0; background: none; text-align: left; cursor: pointer; align-items: flex-start; }
+.who img { width: 72px; height: 96px; object-fit: cover; border-radius: 8px; flex: none; transition: transform 250ms ease, box-shadow 250ms ease; }
+.who:hover img, .who:focus-visible img { transform: translateY(-4px) rotate(-2deg); box-shadow: 0 0 0 1px var(--accent), 0 10px 30px -6px var(--accent); }
+.who .info { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .who h3 { font-size: 26px; line-height: 1.1; }
 .who .role { font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
-.who p { color: var(--soft); font-size: 15px; line-height: 1.5; }
+.who .short { color: var(--soft); font-size: 15px; line-height: 1.5; }
+
+/* character modal */
+.modal { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(3,4,7,0.86); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) var(--gutter-r) calc(16px + env(safe-area-inset-bottom, 0px)) var(--gutter-l); overflow-y: auto; }
+.sheet { position: relative; width: min(100%, 920px); display: flex; flex-direction: column; gap: 22px; }
+.slide { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: clamp(24px, 5vw, 56px); align-items: center; }
+.slide.out-l { animation: outL 200ms ease forwards; } .slide.out-r { animation: outR 200ms ease forwards; }
+.slide.in-r { animation: inR 320ms ease both; } .slide.in-l { animation: inL 320ms ease both; }
+@keyframes outL { to { opacity: 0; transform: translateX(-70px); } } @keyframes outR { to { opacity: 0; transform: translateX(70px); } }
+@keyframes inR { from { opacity: 0; transform: translateX(70px); } } @keyframes inL { from { opacity: 0; transform: translateX(-70px); } }
+.float { perspective: 900px; justify-self: center; width: 100%; max-width: 300px; }
+.pcard { position: relative; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; transform-style: preserve-3d;
+  box-shadow: 0 0 0 1px var(--accent), 0 0 34px -2px var(--accent), 0 30px 60px -20px #000; animation: floaty 6s ease-in-out infinite; }
+.pcard img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pcard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0) 65%); background-size: 250% 100%; animation: sheen 4.5s ease-in-out infinite; mix-blend-mode: soft-light; }
+@keyframes floaty { 0%, 100% { transform: translateY(0) rotateY(-9deg) rotateX(3deg); } 50% { transform: translateY(-12px) rotateY(9deg) rotateX(-3deg); } }
+@keyframes sheen { 0% { background-position: 120% 0; } 60%, 100% { background-position: -60% 0; } }
+.minfo { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.minfo h2 { font-size: clamp(34px, 5vw, 58px); line-height: 1.04; }
+.minfo .about { color: var(--soft); }
+.minfo .arc { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; }
+.minfo .arc .k { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.minfo .arc .v { font-family: var(--display); font-size: clamp(20px, 2.3vw, 26px); line-height: 1.3; }
+.minfo .leads { font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.mbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mbar .count { font-size: 13px; letter-spacing: 0.16em; color: var(--dim); }
+.pill { padding: 10px 20px; border: 1px solid var(--line); border-radius: 999px; background: rgba(11,13,19,0.7); cursor: pointer; font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
+.pill:hover { border-color: var(--accent); }
+.pill.primary { border-color: var(--accent); color: var(--accent); }
+.mclose { align-self: flex-end; }
+@media (max-width: 640px) { .slide { grid-template-columns: 1fr; gap: 18px; } .float { max-width: 170px; } }
+@media (prefers-reduced-motion: reduce) { .pcard, .pcard::after, .slide { animation: none !important; } }
 .soon { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; align-self: flex-start; }
 
 footer { position: relative; z-index: 2; background: var(--space); border-top: 1px solid var(--line); }
@@ -213,6 +246,27 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
 </section>
 </main>
 
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mName" hidden>
+  <div class="sheet">
+    <button class="pill mclose" id="mClose" type="button">Close</button>
+    <div class="slide" id="mSlide">
+      <div class="float"><div class="pcard"><img id="mArt" alt=""></div></div>
+      <div class="minfo">
+        <p class="eyebrow" id="mRole"></p>
+        <h2 id="mName"></h2>
+        <p class="about" id="mAbout"></p>
+        <div class="arc"><p class="k">The arc</p><p class="v" id="mArc"></p></div>
+        <p class="leads" id="mLeads"></p>
+      </div>
+    </div>
+    <div class="mbar">
+      <button class="pill" id="mPrev" type="button">← Previous</button>
+      <span class="count" id="mCount"></span>
+      <button class="pill primary" id="mNext" type="button">Next →</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">
     <p>The F.R.E.E. © 2026 Ario Rofan. All rights reserved.</p>
@@ -239,19 +293,20 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     { n: '12', sign: 'Libra', planet: 'Venus', art: 'libra', bg: 's12', c: '#F0C2C8', title: 'The Final Game', hook: 'Two realms. One peace.', lead: 'Julia', text: 'A ruler who trusts no one surrounds himself with machines. When the game ends, the world is no longer only human, and someone new comes to ask for a treaty.' },
     { n: 'XIII', sign: 'Ophiuchus', planet: null, art: 'ophiuchus', bg: 's13', c: '#E5D6A8', title: 'The Thirteenth', hook: 'The sign the zodiac left out.', lead: 'the serpent-bearer', text: 'Between Scorpio and Sagittarius lies a constellation the twelve leave out: the serpent-bearer, named for a healer who learned to raise the dead. Its bearer in this story was not born. He was built.' }
   ];
+  // name, role, artwork, season index, one line, about, arc
   var CAST = [
-    ['Julia', 'Scorpio · the outlaw president', 'scorpio', 0, 'Loses her office and turns vigilante to protect her son.'],
-    ['Victor Taipan', 'Aries · the conqueror', 'aries', 3, 'Head of the Red Circle. He wins every war he starts and trusts no one living.'],
-    ['Ellie', 'Cancer · the builder', 'cancer', 5, 'Taken hostage at sixteen. She grows into the leader who builds the ships.'],
-    ['Hunter', 'Leo · the heir', 'leo', 2, 'Taipan’s protégé and weapon. He does not know whose son he is.'],
-    ['John', 'Capricorn · the keeper', 'capricorn', 1, 'Attorney General, Ellie’s father. He has kept one secret for decades.'],
-    ['Harry and Daniel', 'Gemini · the twins', 'gemini', 4, 'Harry builds the machines. Daniel inherits his empire.'],
-    ['Kate', 'Virgo · the loyal one', 'virgo', 7, 'Julia’s protector. When Earth falls she takes the war underground.'],
-    ['Jackie', 'Sagittarius · the wit', 'sagittarius', 9, 'An engineer who is quick with a joke. He brings the one ship home.'],
-    ['Nate', 'Pisces · the dreamer', 'pisces', 6, 'An orphan who wins his place on the voyage with a dare.'],
-    ['Natalie', 'Aquarius · the rebel', 'aquarius', 10, 'A Silver Scorpio. She runs the last heist.'],
-    ['Ask', 'Taurus · the healer', 'taurus', 8, 'Cargo unit ASK-13. He is learning faster than anyone planned.'],
-    ['The Silver Scorpios', 'The crew', 'scorpio', 0, 'Life prisoners turned outlaws. They fight because this is where they stand.']
+    ['Julia', 'Scorpio · the outlaw president', 'scorpio', 0, 'Loses her office and turns vigilante to protect her son.', 'Julia led the Federation through years of peace. When an attack she could not prevent costs her the presidency, her allies and her name, she refuses to disappear. She has a son to protect and an enemy to find.', 'From president to fugitive to the heart of the resistance. She is in every season, and at the centre of its last move.'],
+    ['Victor Taipan', 'Aries · the conqueror', 'aries', 3, 'Head of the Red Circle. He wins every war he starts and trusts no one living.', 'The founder of the Red Circle, a cult of the powerful built to erase Julia’s legacy. Patient, brilliant and certain that the world needs a single hand to rule it.', 'From hidden hand to president to emperor. Every victory leaves him with fewer people he can trust.'],
+    ['Ellie', 'Cancer · the builder', 'cancer', 5, 'Taken hostage at sixteen. She grows into the leader who builds the ships.', 'The Attorney General’s daughter. She is sixteen when the story takes her from her home, and she learns early what adults will trade for their secrets.', 'From hostage to rebel to the builder of a thousand ships, and the leader who chooses mercy over victory.'],
+    ['Hunter', 'Leo · the heir', 'leo', 2, 'Taipan’s protégé and weapon. He does not know whose son he is.', 'Raised by Taipan as his own and trained to be his weapon. Solitary, disciplined and very good at finding people who do not want to be found.', 'From the man who hunts the Silver Scorpios to one who must decide whom he serves, once he learns what was taken from him.'],
+    ['John', 'Capricorn · the keeper', 'capricorn', 1, 'Attorney General, Ellie’s father. He has kept one secret for decades.', 'The highest law officer of the Federation, and Ellie’s father. For decades he has kept one secret, and he has already paid for it more than once.', 'From guardian of the law to a father forced to choose between his silence and his daughter.'],
+    ['Harry and Daniel', 'Gemini · the twins', 'gemini', 4, 'Harry builds the machines. Daniel inherits his empire.', 'Harry Lee is the inventor whose machines change the balance of the world, and the first to warn Julia about the Red Circle. Daniel carries on what Harry began.', 'From ally to rival of the most dangerous man alive, and then a legacy that rules an empire.'],
+    ['Kate', 'Virgo · the loyal one', 'virgo', 7, 'Julia’s protector. When Earth falls she takes the war underground.', 'The agent who stays at Julia’s side when everyone else steps away. Precise, tireless and loyal past the point of safety.', 'From bodyguard to commander of the underground, holding Earth together after the ships have gone.'],
+    ['Jackie', 'Sagittarius · the wit', 'sagittarius', 9, 'An engineer who is quick with a joke. He brings the one ship home.', 'Harry’s engineer. He can fly or fix almost anything, and he is quick with a joke when things are at their worst.', 'From the lab to the long voyage and back again, bringing home the one ship that turns around.'],
+    ['Nate', 'Pisces · the dreamer', 'pisces', 6, 'An orphan who wins his place on the voyage with a dare.', 'An orphan with no schooling, no money and a sister he cannot save on his own. He talks his way onto the fleet with a bet nobody believes he can win.', 'From the streets to the stars, and then to leading a colony of the young on a new world.'],
+    ['Natalie', 'Aquarius · the rebel', 'aquarius', 10, 'A Silver Scorpio. She runs the last heist.', 'One of the Silver Scorpios, the crew of life prisoners Julia frees in the first season. She thinks several moves ahead of everyone in the room.', 'From prisoner to outlaw to the mind behind the final heist.'],
+    ['Ask', 'Taurus · the healer', 'taurus', 8, 'Cargo unit ASK-13. He is learning faster than anyone planned.', 'A cargo robot on the new planet, serial ASK-13. He teaches himself from the servers of the abandoned ships and becomes Nate’s closest friend.', 'From carrying crates to healing a colony. He is still learning, and no one knows where it ends.'],
+    ['The Silver Scorpios', 'The crew', 'scorpio', 0, 'Life prisoners turned outlaws. They fight because this is where they stand.', 'A crew of life prisoners held on a secret island and written off by the world. Julia breaks them out because she needs people with nothing left to lose.', 'From prisoners to outlaws to legends.']
   ];
   var $ = function (id) { return document.getElementById(id); };
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -262,15 +317,42 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
 
   // ---------- page content ----------
   var castGrid = $('castGrid');
-  CAST.forEach(function (c) {
-    var d = document.createElement('div'); d.className = 'who'; d.style.setProperty('--accent', S[c[3]].c);
+  CAST.forEach(function (c, ci) {
+    var d = document.createElement('button'); d.type = 'button'; d.className = 'who'; d.style.setProperty('--accent', S[c[3]].c);
+    d.setAttribute('aria-label', c[0] + ', open character card');
     var im = document.createElement('img'); im.src = 'assets/art/' + c[2] + '.jpg'; im.alt = ''; im.loading = 'lazy'; im.width = 72; im.height = 96;
-    var t = document.createElement('div');
+    var t = document.createElement('span'); t.className = 'info';
     var h = document.createElement('h3'); h.textContent = c[0];
-    var r = document.createElement('p'); r.className = 'role'; r.textContent = c[1];
-    var p = document.createElement('p'); p.textContent = c[4];
+    var r = document.createElement('span'); r.className = 'role'; r.textContent = c[1];
+    var p = document.createElement('span'); p.className = 'short'; p.textContent = c[4];
     t.appendChild(h); t.appendChild(r); t.appendChild(p); d.appendChild(im); d.appendChild(t); castGrid.appendChild(d);
+    d.addEventListener('click', function () { openModal(ci, d); });
   });
+  // ---------- character modal ----------
+  var modal = $('modal'), slide = $('mSlide'), mi = 0, mFrom = null, mBusy = false;
+  function fillModal() {
+    var c = CAST[mi], s = S[c[3]];
+    modal.style.setProperty('--accent', s.c);
+    $('mArt').src = 'assets/art/' + c[2] + '.jpg'; $('mArt').alt = s.sign + ' artwork';
+    $('mRole').textContent = c[1]; $('mName').textContent = c[0]; $('mAbout').textContent = c[5]; $('mArc').textContent = c[6];
+    $('mLeads').textContent = (c[0] === 'The Silver Scorpios' ? 'First seen in' : 'Leads') + ' season ' + s.n + ' · ' + s.title;
+    $('mCount').textContent = (mi + 1) + ' / ' + CAST.length;
+  }
+  function openModal(i, from) { mi = i; mFrom = from; fillModal(); slide.className = 'slide'; modal.hidden = false; document.body.style.overflow = 'hidden'; $('mNext').focus(); }
+  function closeModal() { modal.hidden = true; document.body.style.overflow = ''; if (mFrom) mFrom.focus(); }
+  function turn(d) {
+    if (mBusy) return; mBusy = true;
+    var swap = function () { mi = (mi + d + CAST.length) % CAST.length; fillModal(); slide.className = 'slide ' + (d > 0 ? 'in-r' : 'in-l'); mBusy = false; };
+    if (reduce) { swap(); return; }
+    slide.className = 'slide ' + (d > 0 ? 'out-l' : 'out-r'); setTimeout(swap, 200);
+  }
+  $('mNext').addEventListener('click', function () { turn(1); });
+  $('mPrev').addEventListener('click', function () { turn(-1); });
+  $('mClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  var tx = null;
+  modal.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  modal.addEventListener('touchend', function (e) { if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; tx = null; if (Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1); }, { passive: true });
   var dots = $('dots'), dotEls = [];
   S.forEach(function (s, i) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'dot' + (i === LAST ? ' xiii' : '');
@@ -315,6 +397,7 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   window.addEventListener('scroll', measure, { passive: true });
   window.addEventListener('resize', measure);
   document.addEventListener('keydown', function (e) {
+    if (!modal.hidden) { if (e.key === 'Escape') closeModal(); else if (e.key === 'ArrowRight') turn(1); else if (e.key === 'ArrowLeft') turn(-1); return; }
     if (tWheel < 0.95) return;
     if (e.key === 'ArrowLeft') go(cur - 1); else if (e.key === 'ArrowRight') go(cur + 1);
   });
@@ -346,10 +429,15 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
   var wheel = new THREE.Group(); rig.add(wheel);     // turns
   var loader = new THREE.TextureLoader();
   function tex(name) { var t = loader.load('assets/art/' + name + '.jpg'); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t; }
+  function canvasTex(w, h, draw) { var c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); return new THREE.CanvasTexture(c); }
+  function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+  var roundMask = canvasTex(240, 320, function (g, w, h) { g.fillStyle = '#000'; g.fillRect(0, 0, w, h); g.fillStyle = '#fff'; rr(g, 0, 0, w, h, 22); g.fill(); });   // playing-card corners
+  var dotTex = canvasTex(64, 64, function (g) { var d = g.createRadialGradient(32, 32, 0, 32, 32, 32); d.addColorStop(0, 'rgba(255,255,255,1)'); d.addColorStop(0.25, 'rgba(255,255,255,0.7)'); d.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = d; g.fillRect(0, 0, 64, 64); });
+  var ADD = THREE.AdditiveBlending;
   var cardGeo = new THREE.PlaneGeometry(2.4, 3.2), cards = [];
   for (var i = 0; i < N; i++) {
     var a = i * STEP;
-    var m = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex(S[i].art), side: THREE.DoubleSide }));
+    var m = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex(S[i].art), alphaMap: roundMask, alphaTest: 0.5, side: THREE.DoubleSide }));
     m.position.set(Math.sin(a) * R, 0, Math.cos(a) * R); m.rotation.y = a; m.userData.i = i;
     wheel.add(m); cards.push(m);
   }
@@ -361,22 +449,51 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('color', new THREE.BufferAttribute(c, 3));
     wheel.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.22, vertexColors: true })));
   })();
-  var core = new THREE.Group(); rig.add(core);   // the machine core: a sphere of points inside three rings
+  var theme = new THREE.Color(S[0].c), themeTo = new THREE.Color(), tmpC = new THREE.Color(), white = new THREE.Color(0xffffff);
+  function pts(n, size) {
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+    return new THREE.Points(g, new THREE.PointsMaterial({ size: size, map: dotTex, vertexColors: true, blending: ADD, transparent: true, depthWrite: false }));
+  }
+  // ----- the digital sun: a breathing body of points, flames, flare lines and neon orbits -----
+  var sun = new THREE.Group(); rig.add(sun);
+  var SR = 2.1, nB = 2400, body = pts(nB, 0.085), bDir = new Float32Array(nB * 3); sun.add(body);
   (function () {
-    var n = 1500, pos = new Float32Array(n * 3), ga = Math.PI * (3 - Math.sqrt(5));
-    for (var j = 0; j < n; j++) { var y = 1 - (j / (n - 1)) * 2, q = Math.sqrt(1 - y * y), th = ga * j; pos[j * 3] = Math.cos(th) * q * 1.5; pos[j * 3 + 1] = y * 1.5; pos[j * 3 + 2] = Math.sin(th) * q * 1.5; }
-    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    core.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xE5D6A8, size: 0.045, transparent: true, opacity: 0.9 })));
-    core.add(new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.5, 1)), new THREE.LineBasicMaterial({ color: 0xD8C9A3, transparent: true, opacity: 0.16 })));
-    [2.1, 2.5, 2.9].forEach(function (rad, j) {
-      var pts = []; for (var q2 = 0; q2 <= 96; q2++) { var a = q2 / 96 * 6.283; pts.push(new THREE.Vector3(Math.cos(a) * rad, 0, Math.sin(a) * rad)); }
-      var ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xD8C9A3, transparent: true, opacity: 0.4 }));
-      ring.rotation.set(0.5 + j * 0.9, j * 0.7, 0.3 * j); ring.userData.spin = 0.12 + j * 0.07; core.add(ring);
-    });
+    var ga = Math.PI * (3 - Math.sqrt(5)), col = body.geometry.attributes.color.array, hot = new THREE.Color(0xFFF3C4), warm = new THREE.Color(0xFF9A3C);
+    for (var j = 0; j < nB; j++) { var y = 1 - (j / (nB - 1)) * 2, q = Math.sqrt(1 - y * y), th = ga * j; bDir[j * 3] = Math.cos(th) * q; bDir[j * 3 + 1] = y; bDir[j * 3 + 2] = Math.sin(th) * q;
+      tmpC.copy(hot).lerp(warm, Math.random() * 0.8); col[j * 3] = tmpC.r; col[j * 3 + 1] = tmpC.g; col[j * 3 + 2] = tmpC.b; }
   })();
-  var coreHit = new THREE.Mesh(new THREE.SphereGeometry(1.9, 12, 12), new THREE.MeshBasicMaterial({ visible: false })); rig.add(coreHit);
-  var xiii = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex('ophiuchus'), side: THREE.DoubleSide, transparent: true, opacity: 0 }));
-  xiii.scale.setScalar(0.01); rig.add(xiii);    // the thirteenth card waits inside the core
+  function glowSprite(scale, opacity) { var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: dotTex, blending: ADD, transparent: true, depthWrite: false, opacity: opacity })); sp.scale.setScalar(scale); sun.add(sp); return sp; }
+  var halo1 = glowSprite(11, 0.32), halo2 = glowSprite(4.4, 0.4);
+  var nF = 1500, flames = pts(nF, 0.1), fDir = new Float32Array(nF * 3), fA = new Float32Array(nF), fB = new Float32Array(nF), fL = new Float32Array(nF); sun.add(flames);
+  for (var q1 = 0; q1 < nF; q1++) { var u1 = Math.random() * 2 - 1, a1 = Math.random() * 6.283, s1 = Math.sqrt(1 - u1 * u1); fDir[q1 * 3] = s1 * Math.cos(a1); fDir[q1 * 3 + 1] = u1; fDir[q1 * 3 + 2] = s1 * Math.sin(a1); fA[q1] = Math.random(); fB[q1] = 0.18 + Math.random() * 0.35; fL[q1] = 0.7 + Math.random() * Math.random() * 2.6; }
+  var nS = 160, sDir = new Float32Array(nS * 3), sP = new Float32Array(nS * 2), flares = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ blending: ADD, transparent: true, opacity: 0.55, depthWrite: false })); sun.add(flares);
+  flares.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nS * 6), 3));
+  for (var q3 = 0; q3 < nS; q3++) { var u3 = Math.random() * 2 - 1, a3 = Math.random() * 6.283, s3 = Math.sqrt(1 - u3 * u3); sDir[q3 * 3] = s3 * Math.cos(a3); sDir[q3 * 3 + 1] = u3; sDir[q3 * 3 + 2] = s3 * Math.sin(a3); sP[q3 * 2] = Math.random() * 6.283; sP[q3 * 2 + 1] = 0.8 + Math.random() * 2.4; }
+  var cage = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(SR * 1.12, 1)), new THREE.LineBasicMaterial({ color: 0x6FE8FF, blending: ADD, transparent: true, opacity: 0.22, depthWrite: false })); sun.add(cage);
+  var TAIL = 18, BEADS = 3, orbits = [[3.1, 0x5CF2FF, 1.2, 0.0, 0.2, 0.95], [3.6, 0xFF5CD6, 0.5, 0.8, 1.0, -0.75], [4.1, 0xFFD86B, 1.9, 0.3, -0.6, 0.6], [4.6, null, 0.25, 1.4, 0.5, -0.45]].map(function (o) {
+    var g = new THREE.Group(); g.rotation.set(o[2], o[3], o[4]); sun.add(g);
+    var ring = []; for (var q = 0; q <= 128; q++) { var a = q / 128 * 6.283; ring.push(new THREE.Vector3(Math.cos(a) * o[0], 0, Math.sin(a) * o[0])); }
+    var line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ring), new THREE.LineBasicMaterial({ color: o[1] || 0xffffff, blending: ADD, transparent: true, opacity: 0.5, depthWrite: false })); g.add(line);
+    var beads = pts(TAIL * BEADS, 0.3), col = beads.geometry.attributes.color.array; g.add(beads);
+    for (var b = 0; b < BEADS; b++) for (var j = 0; j < TAIL; j++) { var k = Math.pow(1 - j / TAIL, 2.2), ix = (b * TAIL + j) * 3; col[ix] = col[ix + 1] = col[ix + 2] = j === 0 ? 1.6 : k; }
+    if (o[1]) beads.material.color.set(o[1]);
+    return { g: g, r: o[0], sp: o[5], line: line, beads: beads, themed: !o[1] };
+  });
+  var coreHit = new THREE.Mesh(new THREE.SphereGeometry(SR * 1.3, 12, 12), new THREE.MeshBasicMaterial({ visible: false })); rig.add(coreHit);
+  var xiii = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: tex('ophiuchus'), alphaMap: roundMask, alphaTest: 0.05, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+  xiii.scale.setScalar(0.01); rig.add(xiii);    // the thirteenth card waits inside the sun
+  // ----- the aura around the card in front: a glowing edge and sparks in the season's colour -----
+  var BIG = 1.25, aura = new THREE.Group(); aura.position.set(0, 0, R + 0.5); aura.scale.setScalar(BIG); rig.add(aura);
+  var edge = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 4.4), new THREE.MeshBasicMaterial({ blending: ADD, transparent: true, depthWrite: false, opacity: 0,
+    map: canvasTex(360, 440, function (g) { g.strokeStyle = '#fff'; g.shadowColor = '#fff'; [[46, 10], [26, 8], [12, 6], [4, 3]].forEach(function (v) { g.shadowBlur = v[0]; g.lineWidth = v[1]; rr(g, 60, 60, 240, 320, 22); g.stroke(); }); }) }));
+  edge.position.z = -0.03; aura.add(edge);
+  var nK = 90, sparks = pts(nK, 0.17), kU = new Float32Array(nK), kP = new Float32Array(nK * 3); sparks.position.z = 0.04; aura.add(sparks);
+  for (var q4 = 0; q4 < nK; q4++) { kU[q4] = Math.random(); kP[q4 * 3] = Math.random() * 6.283; kP[q4 * 3 + 1] = 1.5 + Math.random() * 3.5; kP[q4 * 3 + 2] = (Math.random() - 0.35) * 0.22; }
+  function edgePoint(u, off, out) {      // a point on the card's edge: u runs 0 to 1 around it
+    var hw = 1.2 + off, hh = 1.6 + off, d = (u % 1) * (4 * hw + 4 * hh);
+    if (d < 2 * hw) { out[0] = -hw + d; out[1] = hh; } else if (d < 2 * hw + 2 * hh) { out[0] = hw; out[1] = hh - (d - 2 * hw); }
+    else if (d < 4 * hw + 2 * hh) { out[0] = hw - (d - 2 * hw - 2 * hh); out[1] = -hh; } else { out[0] = -hw; out[1] = -hh + (d - 4 * hw - 2 * hh); }
+  }
 
   var narrow = false;
   function resize() {
@@ -394,12 +511,12 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
     go(hit.object === coreHit || hit.object === xiii ? LAST : hit.object.userData.i);
   });
 
-  var clock = new THREE.Clock(), look = new THREE.Vector3(), rot = 0, x13 = 0;
+  var clock = new THREE.Clock(), look = new THREE.Vector3(), rot = 0, x13 = 0, time = 0, xy = [0, 0];
   function lerp(a, b, t) { return a + (b - a) * t; }
   function frame() {
     requestAnimationFrame(frame);
     var dt = Math.min(clock.getDelta(), 0.05), ease = reduce ? 1 : 1 - Math.pow(0.0004, dt);
-    if (!reduce) stars.rotation.y += dt * 0.004;
+    if (!reduce) { stars.rotation.y += dt * 0.004; time += dt; }
     rig.visible = tWheel > 0.01;
     if (rig.visible) {
       var t = tWheel * tWheel * (3 - 2 * tWheel);
@@ -408,15 +525,58 @@ footer .wrap { padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px))
       rot = lerp(rot, -(turn + out * 0.5) * STEP, ease); wheel.rotation.y = rot;
       x13 = lerp(x13, out, ease);
       var cz = narrow ? 20 : 16.5;
-      var wx = narrow ? 0 : Math.max(1.5, Math.min(4.6, camera.aspect * 0.414 * (cz - R) - 1.7)), wy = narrow ? 3.0 : 0.1;
+      var wx = narrow ? 0 : Math.max(1.2, Math.min(4.2, camera.aspect * 0.414 * (cz - R - 0.5) - 2.05)), wy = narrow ? 3.0 : -0.5;
       rig.position.set(wx, lerp(wy - 9, wy, t), 0); rig.rotation.x = lerp(0.3, 0.03, t);
       camera.position.set(0, 0.5, cz); look.set(0, 0.2, 0); camera.lookAt(look);
-      for (var j = 0; j < N; j++) {      // light the cards by how directly they face the viewer
-        var b = 0.22 + 0.78 * Math.pow(Math.max(0, Math.cos(j * STEP + rot)), 2.2);
-        cards[j].material.color.setScalar(b * (1 - 0.55 * x13));
+      themeTo.set(S[cur < 0 ? 0 : cur].c); theme.lerp(themeTo, reduce ? 1 : 1 - Math.pow(0.02, dt));
+      var gmax = 0;
+      for (var j = 0; j < N; j++) {      // the card facing the viewer is lit, larger and a little forward
+        var fr = Math.max(0, Math.cos(j * STEP + rot)), g = Math.pow(fr, 14) * (1 - x13), c = cards[j];
+        c.material.color.setScalar((0.22 + 0.78 * Math.pow(fr, 2.2)) * (1 - 0.55 * x13));
+        c.scale.setScalar(1 + (BIG - 1) * g); c.position.setLength(R + 0.5 * g); if (g > gmax) gmax = g;
       }
-      core.rotation.y += dt * 0.25; core.children.forEach(function (c) { if (c.userData.spin) c.rotation.z += dt * c.userData.spin; });
-      xiii.scale.setScalar(Math.max(0.01, 1.12 * x13)); xiii.position.z = (R + 0.5) * x13; xiii.material.opacity = clamp01(x13 * 3);
+      // the aura: strongest when a card has settled in front
+      var glow = Math.max(gmax, x13), kc = sparks.geometry.attributes.color.array, kp = sparks.geometry.attributes.position.array;
+      edge.material.color.copy(theme); edge.material.opacity = glow * (0.8 + 0.2 * Math.sin(time * 3.1));
+      for (var k = 0; k < nK; k++) {
+        kU[k] += dt * 0.012; edgePoint(kU[k], kP[k * 3 + 2], xy); kp[k * 3] = xy[0]; kp[k * 3 + 1] = xy[1];
+        var tw = Math.pow(0.5 + 0.5 * Math.sin(time * kP[k * 3 + 1] + kP[k * 3]), 7) * glow * 1.5;
+        tmpC.copy(theme).lerp(white, 0.45).multiplyScalar(tw); kc[k * 3] = tmpC.r; kc[k * 3 + 1] = tmpC.g; kc[k * 3 + 2] = tmpC.b;
+      }
+      sparks.geometry.attributes.position.needsUpdate = true; sparks.geometry.attributes.color.needsUpdate = true;
+      // the digital sun
+      var sy = narrow ? 0.9 : 3.3, ss = narrow ? 0.78 : 0.92, pulse = 1 + 0.05 * Math.sin(time * 1.3) + 0.02 * Math.sin(time * 7.1);
+      sun.position.y = sy; sun.scale.setScalar(ss); coreHit.position.y = sy; coreHit.scale.setScalar(ss);
+      var bp = body.geometry.attributes.position.array;
+      for (var b1 = 0; b1 < nB; b1++) {      // the body breathes and ripples
+        var dx = bDir[b1 * 3], dy = bDir[b1 * 3 + 1], dz = bDir[b1 * 3 + 2];
+        var rad = SR * pulse * (1 + 0.07 * Math.sin(dy * 6 + time * 2.2) + 0.05 * Math.sin(dx * 7 - time * 1.7) + 0.04 * Math.sin(dz * 9 + time * 3.1));
+        bp[b1 * 3] = dx * rad; bp[b1 * 3 + 1] = dy * rad; bp[b1 * 3 + 2] = dz * rad;
+      }
+      body.geometry.attributes.position.needsUpdate = true; body.rotation.y += dt * 0.3;
+      var fp = flames.geometry.attributes.position.array, fc = flames.geometry.attributes.color.array;
+      for (var f1 = 0; f1 < nF; f1++) {      // flames leave the surface, curl and fade into the season's colour
+        var life = (fA[f1] + time * fB[f1]) % 1, d1 = SR * 0.95 + life * fL[f1], tw1 = life * 0.9, cs = Math.cos(tw1), sn = Math.sin(tw1), ex = fDir[f1 * 3], ez = fDir[f1 * 3 + 2];
+        fp[f1 * 3] = (ex * cs - ez * sn) * d1; fp[f1 * 3 + 1] = fDir[f1 * 3 + 1] * d1 + life * life * 0.5; fp[f1 * 3 + 2] = (ex * sn + ez * cs) * d1;
+        tmpC.setRGB(1, 0.9, 0.62).lerp(theme, Math.min(1, life * 1.4)).multiplyScalar(Math.pow(1 - life, 1.6) * 1.2); fc[f1 * 3] = tmpC.r; fc[f1 * 3 + 1] = tmpC.g; fc[f1 * 3 + 2] = tmpC.b;
+      }
+      flames.geometry.attributes.position.needsUpdate = true; flames.geometry.attributes.color.needsUpdate = true;
+      var lp = flares.geometry.attributes.position.array;
+      for (var l1 = 0; l1 < nS; l1++) {      // flare lines flicker in and out
+        var len = sP[l1 * 2 + 1] * Math.pow(Math.abs(Math.sin(time * 0.9 + sP[l1 * 2])), 3), r0 = SR * 1.02, r1 = r0 + len;
+        lp[l1 * 6] = sDir[l1 * 3] * r0; lp[l1 * 6 + 1] = sDir[l1 * 3 + 1] * r0; lp[l1 * 6 + 2] = sDir[l1 * 3 + 2] * r0;
+        lp[l1 * 6 + 3] = sDir[l1 * 3] * r1; lp[l1 * 6 + 4] = sDir[l1 * 3 + 1] * r1; lp[l1 * 6 + 5] = sDir[l1 * 3 + 2] * r1;
+      }
+      flares.geometry.attributes.position.needsUpdate = true; flares.material.color.copy(theme).lerp(white, 0.3); flares.rotation.y -= dt * 0.12;
+      halo1.material.color.copy(theme); halo1.scale.setScalar(11 * pulse); halo2.material.color.setRGB(1, 0.86, 0.6).lerp(theme, 0.25); halo2.scale.setScalar(4.4 * (2 - pulse));
+      cage.rotation.y += dt * 0.2; cage.rotation.x += dt * 0.07; cage.scale.set(1 + 0.07 * Math.sin(time * 2.0), 1 + 0.07 * Math.sin(time * 2.6 + 1), 1 + 0.07 * Math.sin(time * 1.9 + 2));
+      orbits.forEach(function (o, oi) {      // neon orbits, each with three bright beads and their tails
+        o.g.rotation.y += dt * 0.08 * (oi % 2 ? -1 : 1); if (o.themed) { o.line.material.color.copy(theme); o.beads.material.color.copy(theme); }
+        var op = o.beads.geometry.attributes.position.array, dir = o.sp > 0 ? 1 : -1;
+        for (var b = 0; b < BEADS; b++) for (var j2 = 0; j2 < TAIL; j2++) { var an = time * o.sp + b * 6.283 / BEADS - dir * j2 * 0.05, ix = (b * TAIL + j2) * 3; op[ix] = Math.cos(an) * o.r; op[ix + 1] = 0; op[ix + 2] = Math.sin(an) * o.r; }
+        o.beads.geometry.attributes.position.needsUpdate = true;
+      });
+      xiii.scale.setScalar(Math.max(0.01, BIG * x13)); xiii.position.set(0, sy * (1 - x13), (R + 0.5) * x13); xiii.material.opacity = clamp01(x13 * 3);
     }
     renderer.render(scene, camera);
   }
