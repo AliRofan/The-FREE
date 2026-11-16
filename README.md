@@ -14,7 +14,7 @@ A static, single-page site for *The F.R.E.E.: The First Robotic Empire of Earth*
 - `index.html` – the page GitHub serves.
 - `src/page.html` – the source of the page. If you edit it, run `./build.sh` to regenerate `index.html` (or make the same edit in `index.html`).
 - `assets/art/` – the thirteen zodiac artworks.
-- `assets/space/` – planet, Sun, Moon, Earth and nebula backdrops, made from NASA photographs.
+- `assets/space/` – planet, Sun, Moon, Earth and nebula backdrops, made from NASA photographs. Every planet sits on the same circle so they change in place.
 
 ## Editing the text
 
